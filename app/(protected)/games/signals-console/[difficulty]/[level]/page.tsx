@@ -8,19 +8,21 @@ import type { DifficultyType } from "@prisma/client";
 
 import BtnResetGrid from "@/components/games/BtnResetGrid";
 import OverlayTuto from "@/components/games/OverlayTuto";
-import CanvasGrid, { type Path } from "@/components/signals-console/CanvasGrid";
-import EndLevelModal from "@/components/signals-console/EndLevelModal";
-import LevelInfo from "@/components/signals-console/LevelInfo";
+import CanvasGrid, { type Path } from "@/components/games/signals-console/CanvasGrid";
+import EndLevelModal from "@/components/games/signals-console/EndLevelModal";
+import LevelInfo from "@/components/games/signals-console/LevelInfo";
 import {
   LEVELS_BY_DIFFICULTY,
   TUTOS_BY_DIFFICULTY,
 } from "@/lib/signals-console/global";
+import { GAMES } from "@/lib/utils";
 
 export default function SignalsConsoleLevelPage() {
-  const slug = "signals-console";
   const { level, difficulty } = useParams();
-  const levelNum = Number(level);
   const router = useRouter();
+
+  const slug = GAMES[2].slug;
+  const levelNum = Number(level);
   const diff = difficulty as DifficultyType;
   const difficultyLevels = LEVELS_BY_DIFFICULTY[diff];
 

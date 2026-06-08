@@ -18,7 +18,6 @@ export const GAMES: Game[] = [
     slug: "overflowing-palette",
     icon: PaintbrushIcon,
     title: "Overflowing Palette",
-    subtitle: "Déplace — assemble — triomphe",
     description: `Dive into a vibrant tapestry of colors! This puzzle game offers a variety of levels with a ${highlightingText("grid of colored blocks")} that you must transform into a ${highlightingText("single shade")}. With a limited number of moves, choose the right color combination and watch the grid transform! ${highlightingText("Every choice is strategic")}: a single click can repaint everything… or ruin it all!`,
     type: PuzzleType.overflowing_palette,
   },
@@ -27,7 +26,6 @@ export const GAMES: Game[] = [
     slug: "energy-matrix",
     icon: BoxesIcon,
     title: "Energy Matrix",
-    subtitle: "Réorganise la grille",
     description: `Reconnect the grid’s energy! This puzzle challenges you to fill a grid of gray circles using ${highlightingText("predefined shapes")}. Place them strategically to cover every space without wasting your resources. Some ${highlightingText("shapes")} cover multiple circles at once — it’s up to you to find the perfect combination!`,
     type: PuzzleType.energy_matrix,
   },
@@ -36,7 +34,6 @@ export const GAMES: Game[] = [
     slug: "signals-console",
     icon: CableIcon,
     title: "Signals Console",
-    subtitle: "Réorganise la grille",
     description: `Become a master of connections! This puzzle challenges you to ${highlightingText("connect the circles")} of the same color ${highlightingText("without crossing the lines")}. Every connection counts, and a single misstep ${highlightingText("can be costly")}. Think carefully, plan ahead, and weave a harmonious network to win the game!`,
     type: PuzzleType.signals_console,
   },
@@ -44,46 +41,6 @@ export const GAMES: Game[] = [
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
-}
-
-export async function getCroppedImg(
-  imageSrc: string,
-  pixelCrop: { x: number; y: number; width: number; height: number },
-  outputWidth: number,
-  outputHeight: number,
-): Promise<File> {
-  const image = await new Promise<HTMLImageElement>((resolve, reject) => {
-    const img = new Image();
-    img.src = imageSrc;
-    img.crossOrigin = "anonymous";
-    img.onload = () => resolve(img);
-    img.onerror = reject;
-  });
-
-  const canvas = document.createElement("canvas");
-  canvas.width = outputWidth;
-  canvas.height = outputHeight;
-  const ctx = canvas.getContext("2d");
-  if (!ctx) throw new Error("Impossible d'obtenir le contexte 2D");
-
-  ctx.drawImage(
-    image,
-    pixelCrop.x,
-    pixelCrop.y,
-    pixelCrop.width,
-    pixelCrop.height,
-    0,
-    0,
-    outputWidth,
-    outputHeight,
-  );
-
-  return new Promise((resolve) => {
-    canvas.toBlob((blob) => {
-      if (!blob) throw new Error("Erreur lors du crop de l’image");
-      resolve(new File([blob], "avatar.png", { type: "image/png" }));
-    }, "image/png");
-  });
 }
 
 /**

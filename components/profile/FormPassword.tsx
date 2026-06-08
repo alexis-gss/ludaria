@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import { toast } from "sonner";
 
+import type { FormEvent } from "react";
+
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -13,7 +15,7 @@ import {
   FieldSet,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { getPasswordRules, isPasswordStrong } from "@/lib/validation/password";
+import { getPasswordRules, isPasswordStrong } from "@/lib/validations";
 
 export default function FormPassword() {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -24,7 +26,7 @@ export default function FormPassword() {
   const pwRules = getPasswordRules(newPassword, confirmPassword);
   const passwordValid = isPasswordStrong(newPassword, confirmPassword);
 
-  async function onChangePassword(e: React.FormEvent) {
+  async function onChangePassword(e: FormEvent) {
     e.preventDefault();
     if (!passwordValid) {
       toast.error("Mot de passe invalide", {

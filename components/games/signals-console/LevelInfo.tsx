@@ -5,6 +5,7 @@ import { InfoIcon } from "lucide-react";
 import type { DifficultyType } from "@prisma/client";
 
 import BtnBackTo, { DeepPageEnum } from "@/components/games/BtnBackTo";
+import RemainingMoves from "@/components/games/RemainingMoves";
 import { Button } from "@/components/ui/button";
 
 interface LevelInfoProps {
@@ -41,9 +42,9 @@ export default function LevelInfo({
         Level {level}{" "}
         <span className="text-muted-foreground">({difficulty})</span>
       </h2>
-      <p className="text-sm text-muted-foreground mt-1">
-        Segments : {segmentsUsed} / {maxSegments}
-      </p>
+      <div className="flex items-center justify-between gap-2 mt-5 mb-2 relative">
+        <RemainingMoves number={maxSegments - segmentsUsed} />
+      </div>
     </div>
   );
 }

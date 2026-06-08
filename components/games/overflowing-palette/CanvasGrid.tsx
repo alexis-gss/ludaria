@@ -2,14 +2,16 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import type { Color } from "@/types/overflowing-palette";
+import type { CellColor } from "@/types/overflowing-palette";
+import type { MouseEvent } from "react";
+
 
 import { useSound } from "@/components/SoundProvider";
 import { COLOR_HEX } from "@/lib/overflowing-palette/global";
 import { cn, drawBlackCell } from "@/lib/utils";
 
 interface CanvasGridProps {
-  grid: Color[][];
+  grid: CellColor[][];
   onCellClick: (r: number, c: number) => void;
   animating?: boolean;
   celebrate?: boolean;
@@ -48,7 +50,7 @@ export default function CanvasGrid({
 
   const localAnimatedCells = useRef<AnimatedCell[]>([]);
 
-  const isColorable = (color: Color) => color !== "black" && color !== "frozen";
+  const isColorable = (color: CellColor) => color !== "black" && color !== "frozen";
 
   const triggerAnimation = (r: number, c: number) => {
     if (!isColorable(grid[r][c])) return;
@@ -66,7 +68,7 @@ export default function CanvasGrid({
     triggerAnimation(r, c);
   };
 
-  const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const handleCanvasClick = (e: MouseEvent<HTMLCanvasElement>) => {
     if (!canvasRef.current) return;
     const rect = canvasRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -82,7 +84,7 @@ export default function CanvasGrid({
     }
   };
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const handleMouseMove = (e: MouseEvent<HTMLCanvasElement>) => {
     if (!canvasRef.current) return;
     const rect = canvasRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;

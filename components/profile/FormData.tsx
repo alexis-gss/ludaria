@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+
+import type { SubmitEvent } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -27,15 +29,15 @@ export default function FormData() {
   const { user, setUser } = useUser();
   const [pseudo, setPseudo] = useState<string>(user?.pseudo ?? "");
   const [email, setEmail] = useState<string>(user?.email ?? "");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  // Sync local form when provider user changes
+  // Sync local form when provider user changes.
   useEffect(() => {
     setPseudo(user?.pseudo ?? "");
     setEmail(user?.email ?? "");
   }, [user]);
 
-  async function onSave(e: React.FormEvent) {
+  async function onSave(e: SubmitEvent) {
     e.preventDefault();
     setLoading(true);
     try {
@@ -46,17 +48,17 @@ export default function FormData() {
       });
       if (!res.ok) {
         const err = await res.json().catch(() => null);
-        throw new Error(err?.error ?? `Erreur ${res.status}`);
+        throw new Error(err?.error ?? `Error ${res.status}`);
       }
       const updated: PublicUser = await res.json();
       setUser(updated);
-      toast.success("Profil mis à jour", {
-        description: "Vos informations ont été enregistrées.",
+      toast.success("Profile updated", {
+        description: "Your information has been saved.",
       });
     } catch (err) {
       console.error("Profile save error:", err);
-      toast.error("Erreur", {
-        description: "Impossible d’enregistrer le profil.",
+      toast.error("Error", {
+        description: "Impossible to save the profile.",
       });
     } finally {
       setLoading(false);
@@ -67,11 +69,10 @@ export default function FormData() {
     <form onSubmit={onSave} className="space-y-6">
       <FieldSet>
         <FieldLegend className="font-bold tracking-tight">
-          Informations générales du profile
+          General Information
         </FieldLegend>
         <FieldDescription>
-          Ces informations sont utilisées pour personnaliser votre compte et vos
-          communications.
+          These informations are used to personalize your account and your communications.
         </FieldDescription>
         <FieldGroup className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-6">
           <Field>
@@ -81,11 +82,10 @@ export default function FormData() {
               value={pseudo ?? ""}
               onChange={(e) => setPseudo(e.target.value)}
               className="mt-1"
-              placeholder="Votre nom"
+              placeholder="Your name"
             />
             <FieldDescription>
-              Votre pseudo sera visible sur votre profil et dans vos
-              interactions avec la plateforme.
+              Your pseudo will be visible on your profile and in your interactions with the platform.
             </FieldDescription>
           </Field>
           <Field>
@@ -99,8 +99,7 @@ export default function FormData() {
               placeholder="adresse@exemple.com"
             />
             <FieldDescription>
-              Votre e-mail sera utilisé pour la connexion et les notifications
-              importantes liées à votre compte.
+              Your e-mail will be used for login and important notifications related to your account.
             </FieldDescription>
           </Field>
         </FieldGroup>
@@ -111,7 +110,7 @@ export default function FormData() {
             type="submit"
             disabled={loading}
           >
-            {loading ? "Enregistrement…" : "Enregistrer"}
+            {loading ? "Saving…" : "Save"}
           </Button>
           <Button
             className="cursor-pointer transition-all duration-300"
@@ -123,7 +122,7 @@ export default function FormData() {
               setEmail(user?.email ?? "");
             }}
           >
-            Annuler
+            Cancel
           </Button>
         </FieldGroup>
       </FieldSet>

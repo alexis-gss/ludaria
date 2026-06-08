@@ -1,19 +1,23 @@
 "use client";
-import { useEffect, useState } from "react";
-import { Lock } from "lucide-react";
+
 import { motion, useAnimation } from "framer-motion";
-import { BADGE_CONFIG, Badges, type BadgeId } from "@/lib/badges";
+import { Lock } from "lucide-react";
+import { useEffect, useState } from "react";
+
+import type { ReactNode } from "react";
+
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { BADGE_CONFIG, Badges, type BadgeId } from "@/lib/badges";
 
 function FlipBadge({
   children,
   className,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
 }) {
   const controls = useAnimation();

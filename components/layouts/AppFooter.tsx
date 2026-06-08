@@ -16,7 +16,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import LogoLoop from "@/components/ui/logo-loop";
 
-const AppFooter: React.FC = () => {
+export default function AppFooter() {
   const currentYear = new Date().getFullYear();
   const logoSize = 20;
   const techLogos = [
@@ -153,4 +153,3 @@ const AppFooter: React.FC = () => {
     </footer>
   );
 };
-export default AppFooter;

@@ -7,14 +7,13 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
-import type { FormEvent} from "react";
+import type { SubmitEvent } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Magnet from "@/components/ui/magnet";
-import { getPasswordRules, isPasswordStrong } from "@/lib/validation/password";
-
+import { getPasswordRules, isPasswordStrong } from "@/lib/validations";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
@@ -27,7 +26,7 @@ export default function RegisterPage() {
   const pwRules = getPasswordRules(password, confirm);
   const passwordValid = isPasswordStrong(password, confirm);
 
-  async function onRegister(e: FormEvent) {
+  async function onRegister(e: SubmitEvent) {
     e.preventDefault();
     if (!passwordValid) {
       toast.error("Invalid password", {

@@ -1,16 +1,16 @@
 import { DifficultyType } from "@prisma/client";
 
 import type { Tuto } from "@/types/global";
-import type { Color, LevelDef } from "@/types/overflowing-palette";
+import type { CellColor, LevelDef } from "@/types/overflowing-palette";
 
 import { easyLevels } from "@/lib/overflowing-palette/levels/easy";
 import { hardLevels } from "@/lib/overflowing-palette/levels/hard";
 import { mediumLevels } from "@/lib/overflowing-palette/levels/medium";
 import { highlightingText } from "@/lib/utils";
 
-export const COLORS: Color[] = ["blue", "red", "green", "yellow", "purple"];
+export const COLORS: CellColor[] = ["blue", "red", "green", "yellow", "purple"];
 
-export const COLOR_CLASSES: Record<Color, string> = {
+export const COLOR_CLASSES: Record<CellColor, string> = {
   blue: "bg-blue-500",
   red: "bg-red-500",
   green: "bg-green-500",
@@ -20,7 +20,7 @@ export const COLOR_CLASSES: Record<Color, string> = {
   frozen: "bg-cyan-200",
 };
 
-export const COLOR_HEX: Record<Color, string> = {
+export const COLOR_HEX: Record<CellColor, string> = {
   blue: "#3b82f6",
   red: "#ef4444",
   green: "#22c55e",
@@ -36,7 +36,6 @@ export const LEVELS_BY_DIFFICULTY: Record<DifficultyType, LevelDef[]> = {
   [DifficultyType.hard]: hardLevels,
 };
 
-// Overlays par difficulté
 export const TUTOS_BY_DIFFICULTY: Record<DifficultyType, Record<number, Tuto>> = {
   [DifficultyType.easy]: {
     1: {

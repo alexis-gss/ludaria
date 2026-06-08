@@ -7,9 +7,9 @@ import { useEffect, useState } from "react";
 import type { PuzzleType, DifficultyType } from "@prisma/client";
 
 import { ExpandingColumn } from "@/components/ExpandingColumn";
-import UserBadges from "@/components/UserBadges";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import UserBadges from "@/components/UserBadges";
 import { DIFFICULTIES, GAMES } from "@/lib/utils";
 
 export default function DashboardPage() {
@@ -50,7 +50,7 @@ export default function DashboardPage() {
         }
         setProgress(newProgress);
       } catch (err) {
-        console.error("Erreur lors de la récupération des progressions :", err);
+        console.error("Error retrieving progress:", err);
       }
     };
 
@@ -73,13 +73,7 @@ export default function DashboardPage() {
         </p>
       </motion.div>
       <UserBadges />
-      <div
-        className="
-          flex flex-col lg:flex-row
-          w-full h-auto lg:h-[500px]
-          overflow-hidden rounded-2xl shadow-lg
-        "
-      >
+      <div className="flex flex-col lg:flex-row w-full h-auto lg:h-[500px] overflow-hidden rounded-2xl shadow-lg">
         {GAMES.map((game, gameIndex) => (
           <ExpandingColumn
             key={game.id}

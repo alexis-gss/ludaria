@@ -16,7 +16,6 @@ import { useUser } from "@/components/UserProvider";
 import { useFormatedDate } from "@/hooks/use-formated-value";
 import { cn } from "@/lib/utils";
 
-
 type TabsType = {
   value: string;
   label: string;
@@ -27,12 +26,11 @@ export default function ProfilePage() {
   const { user } = useUser();
 
   const tabs = [
-    { value: "general", label: "Général", component: FormData },
-    { value: "password", label: "Mot de passe", component: FormPassword },
-    { value: "logout", label: "Zone de danger", component: FormDelete },
+    { value: "general", label: "General", component: FormData },
+    { value: "password", label: "Password", component: FormPassword },
+    { value: "logout", label: "Danger Zone", component: FormDelete },
   ] as TabsType;
 
-  // État pour gérer la tab active pour l’animation
   const [activeTab, setActiveTab] = useState(tabs[0].value);
 
   const userCreatedAt = user?.createdAt
@@ -44,27 +42,24 @@ export default function ProfilePage() {
 
   return (
     <div className="max-w-7xl mx-auto min-h-screen p-6 pt-18">
-      {/* INTRO */}
       <section className="text-center md:text-start pt-6">
         <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">
-          Paramètres du profil
+          Profile Settings
         </h1>
         <p className="text-muted-foreground text-base leading-relaxed max-w-2xl mx-auto md:ms-0">
-          Gérez les informations de votre compte personnel.
+          Manage your personal account information.
         </p>
         <p className="text-muted-foreground text-base leading-relaxed max-w-2xl mx-auto md:ms-0">
-          Vous pouvez ici modifier votre <strong>pseudo</strong> et votre{" "}
-          <strong>email</strong>, mettre à jour votre{" "}
-          <strong>mot de passe</strong>, ou{" "}
-          <strong>supprimer définitivement</strong> votre compte si vous le
-          souhaitez.
+          You can modify your <strong>username</strong> and <strong>email</strong> here,
+          update your <strong>password</strong>,
+          or <strong>permanently delete</strong> your account if you wish.
         </p>
         {/* DATES */}
         <Card className="flex flex-col md:flex-row md:items-center gap-4 bg-muted/30 border border-border/50 rounded-xl p-4 mt-4 mx-auto md:ms-0 w-fit">
           <div className="flex justify-center md:justify-start items-center gap-2">
             <CalendarDays className="w-5 h-5 text-muted-foreground" />
             <span className="text-start text-sm text-muted-foreground">
-              Membre depuis le{" "}
+              Member since{" "}
               <strong>{useFormatedDate(userCreatedAt.toString())}</strong>
             </span>
           </div>
@@ -72,13 +67,12 @@ export default function ProfilePage() {
           <div className="flex justify-center md:justify-start items-center gap-2">
             <RefreshCw className="w-5 h-5 text-muted-foreground" />
             <span className="text-start text-sm text-muted-foreground">
-              Dernière mise à jour le{" "}
+              Last updated on{" "}
               <strong>{useFormatedDate(userUpdatedAt.toString())}</strong>
             </span>
           </div>
         </Card>
       </section>
-      {/* TABS */}
       <Tabs
         defaultValue={tabs[0].value}
         orientation="vertical"
@@ -110,7 +104,6 @@ export default function ProfilePage() {
             ))}
           </TabsList>
         </div>
-        {/* CONTENU DES TABS AVEC ANIMATION */}
         <div className="flex-1">
           {tabs.map(
             (tab) =>

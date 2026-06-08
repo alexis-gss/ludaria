@@ -4,7 +4,7 @@ import { useRef, useEffect, useState, useCallback, useMemo } from "react";
 
 import type { LevelDef, Offset } from "@/types/energy-matrix";
 
-import Selectors from "@/components/energy-matrix/Selectors";
+import Selectors from "@/components/games/energy-matrix/Selectors";
 
 const rotate = (offsets: Offset[], t = 1) => {
   let res = offsets.map((o) => ({ ...o }));

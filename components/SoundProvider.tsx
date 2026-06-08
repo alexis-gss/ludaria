@@ -2,6 +2,8 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 
+import type { ReactNode } from "react";
+
 interface SoundContextType {
   muted: boolean;
   toggleMute: () => void;
@@ -10,7 +12,7 @@ interface SoundContextType {
 
 const SoundContext = createContext<SoundContextType | undefined>(undefined);
 
-export const SoundProvider: React.FC<{ children: React.ReactNode }> = ({
+export const SoundProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [muted, setMutedState] = useState(false);

@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import type { LevelDef } from "@/types/signals-console";
+import type { MouseEvent, TouchEvent } from "react";
+
 
 import { COLOR_HEX } from "@/lib/signals-console/global";
 import { drawBlackCell, drawRoundedRect } from "@/lib/utils";
@@ -242,7 +244,7 @@ export default function CanvasGrid({
   }, [cols, rows, gridW, gridH, level]);
 
   const getCellFromEvent = useCallback(
-    (e: React.MouseEvent | React.TouchEvent): Cell | null => {
+    (e: MouseEvent | TouchEvent): Cell | null => {
       const canvas = canvasRef.current;
       if (!canvas) return null;
       const rect = canvas.getBoundingClientRect();
@@ -250,11 +252,11 @@ export default function CanvasGrid({
       const clientX =
         "touches" in e
           ? e.touches[0]?.clientX
-          : (e as React.MouseEvent).clientX;
+          : (e as MouseEvent).clientX;
       const clientY =
         "touches" in e
           ? e.touches[0]?.clientY
-          : (e as React.MouseEvent).clientY;
+          : (e as MouseEvent).clientY;
       if (clientX === undefined || clientY === undefined) return null;
 
       const r = Math.floor((clientY - rect.top) / STEP);
@@ -266,7 +268,7 @@ export default function CanvasGrid({
   );
 
   const startDraw = useCallback(
-    (e: React.MouseEvent | React.TouchEvent) => {
+    (e: MouseEvent | TouchEvent) => {
       const cell = getCellFromEvent(e);
       if (!cell) return;
       const [r, c] = cell;
@@ -298,7 +300,7 @@ export default function CanvasGrid({
   );
 
   const moveDraw = useCallback(
-    (e: React.MouseEvent | React.TouchEvent) => {
+    (e: MouseEvent | TouchEvent) => {
       if (!isDrawingRef.current || !activeColorRef.current) return;
       const cell = getCellFromEvent(e);
       if (!cell) return;

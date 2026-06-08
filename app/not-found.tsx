@@ -12,14 +12,14 @@ export default function NotFound() {
       <Magnet padding={85} magnetStrength={50}>
         <FuzzyText baseIntensity={0.08}>404</FuzzyText>
         <p className="mt-2">
-          Oops ! The page you are looking for cannot be found.
+          Oops! The page you are looking for cannot be found.
         </p>
         <Button
           className="cursor-pointer text-white font-semibold bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 hover:opacity-85 mt-5"
           type="button"
           asChild
         >
-          <Link href="/">Retour à l’accueil</Link>
+          <Link href="/">Back to the homepage</Link>
         </Button>
       </Magnet>
     </div>

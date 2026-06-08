@@ -4,44 +4,46 @@ import { PuzzleType } from "@prisma/client";
 import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState, useRef, useCallback } from "react";
 
-import type { Color } from "@/types/overflowing-palette";
+import type { CellColor } from "@/types/overflowing-palette";
 import type { DifficultyType } from "@prisma/client";
 
 import BtnResetGrid from "@/components/games/BtnResetGrid";
+import CanvasGrid from "@/components/games/overflowing-palette/CanvasGrid";
+import ColorSelector from "@/components/games/overflowing-palette/ColorSelector";
+import EndLevelModal from "@/components/games/overflowing-palette/EndLevelModal";
+import LevelInfo from "@/components/games/overflowing-palette/LevelInfo";
 import OverlayTuto from "@/components/games/OverlayTuto";
-import CanvasGrid from "@/components/overflowing-palette/CanvasGrid";
-import ColorSelector from "@/components/overflowing-palette/ColorSelector";
-import EndLevelModal from "@/components/overflowing-palette/EndLevelModal";
-import LevelInfo from "@/components/overflowing-palette/LevelInfo";
 import {
   LEVELS_BY_DIFFICULTY,
   TUTOS_BY_DIFFICULTY,
 } from "@/lib/overflowing-palette/global";
+import { GAMES } from "@/lib/utils";
 
 export default function OverflowingPaletteLevelPage() {
-  const slug = "overflowing-palette";
   const { difficulty, level } = useParams();
   const router = useRouter();
+
+  const slug = GAMES[0].slug;
   const diff = difficulty as DifficultyType;
   const levelNum = Number(level);
 
   const levels = LEVELS_BY_DIFFICULTY[diff] || [];
   const levelDef = levels.find((l) => l.id === levelNum);
 
-  const [grid, setGrid] = useState<Color[][]>(
+  const [grid, setGrid] = useState<CellColor[][]>(
     levelDef ? levelDef.grid.map((r) => [...r]) : []
   );
-  const [selectedColor, setSelectedColor] = useState<Color>("blue");
-  const [movesLeft, setMovesLeft] = useState(levelDef ? levelDef.moves : 0);
-  const [gameOver, setGameOver] = useState(false);
-  const [won, setWon] = useState(false);
-  const [celebrate, setCelebrate] = useState(false);
-  const [movesUsed, setMovesUsed] = useState(0);
+  const [selectedColor, setSelectedColor] = useState<CellColor>("blue");
+  const [movesLeft, setMovesLeft] = useState<number>(levelDef ? levelDef.moves : 0);
+  const [gameOver, setGameOver] = useState<boolean>(false);
+  const [won, setWon] = useState<boolean>(false);
+  const [celebrate, setCelebrate] = useState<boolean>(false);
+  const [movesUsed, setMovesUsed] = useState<number>(0);
   const animatingRef = useRef(false);
 
   // Overlays tuto.
-  const [info, setInfo] = useState(false);
-  const [steps, setSteps] = useState(1);
+  const [info, setInfo] = useState<boolean>(false);
+  const [steps, setSteps] = useState<number>(1);
   const overlays = TUTOS_BY_DIFFICULTY[diff];
   const overlay = overlays[steps as keyof typeof overlays];
 
@@ -93,10 +95,10 @@ export default function OverflowingPaletteLevelPage() {
   const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
   const animateFloodFill = async (
-    g: Color[][],
+    g: CellColor[][],
     sr: number,
     sc: number,
-    newColor: Color
+    newColor: CellColor
   ) => {
     animatingRef.current = true;
     const rows = g.length;
@@ -151,7 +153,7 @@ export default function OverflowingPaletteLevelPage() {
     return g;
   };
 
-  const allTarget = (g: Color[][]) =>
+  const allTarget = (g: CellColor[][]) =>
     levelDef &&
     g
       .flat()
@@ -220,9 +222,9 @@ export default function OverflowingPaletteLevelPage() {
       {info && overlay ? (
         <OverlayTuto
           {...overlay}
-          onClick={() => setSteps(steps + 1)}
           steps={steps}
           maxSteps={Object.keys(overlays).length}
+          onClick={() => setSteps(steps + 1)}
         />
       ) : null}
       <div className="max-w-7xl mx-auto p-6 pt-18">

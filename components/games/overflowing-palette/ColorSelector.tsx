@@ -5,21 +5,22 @@ import { ChevronDownIcon } from "lucide-react";
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { isDesktop } from "react-device-detect";
 
-import type { Color } from "@/types/overflowing-palette";
+import type { CellColor } from "@/types/overflowing-palette";
 import type { DifficultyType } from "@prisma/client";
+import type { ReactNode } from "react";
 
 import { Kbd } from "@/components/ui/kbd";
 import { COLOR_CLASSES } from "@/lib/overflowing-palette/global";
 import { DIFFICULTIES } from "@/lib/utils";
 
 interface ColorSelectorProps {
-  selectedColor: Color;
-  onSelect: (c: Color) => void;
+  selectedColor: CellColor;
+  onSelect: (c: CellColor) => void;
   difficulty: DifficultyType;
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
 
-type ColorMapEntry = { keyLabel: string; code: string; color: Color };
+type ColorMapEntry = { keyLabel: string; code: string; color: CellColor };
 
 export default function ColorSelector({
   selectedColor,
@@ -71,7 +72,7 @@ export default function ColorSelector({
 
   // Memoized handleSelect
   const handleSelect = useCallback(
-    (color: Color) => {
+    (color: CellColor) => {
       onSelect(color);
       playSound();
     },

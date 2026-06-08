@@ -26,7 +26,6 @@ export const LEVELS_BY_DIFFICULTY: Record<DifficultyType, LevelDef[]> = {
   [DifficultyType.hard]: hardLevels,
 };
 
-// Overlays par difficulté
 export const TUTOS_BY_DIFFICULTY: Record<DifficultyType, Record<number, Tuto>> = {
   [DifficultyType.easy]: {
     1: {

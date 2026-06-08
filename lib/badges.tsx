@@ -1,15 +1,17 @@
-import { easyLevels as signals_console_easy } from "@/lib/signals-console/levels/easy";
-import { mediumLevels as signals_console_medium } from "@/lib/signals-console/levels/medium";
-import { hardLevels as signals_console_hard } from "@/lib/signals-console/levels/hard";
-import { easyLevels as overflowing_palette_easy } from "@/lib/overflowing-palette/levels/easy";
-import { mediumLevels as overflowing_palette_medium } from "@/lib/overflowing-palette/levels/medium";
-import { hardLevels as overflowing_palette_hard } from "@/lib/overflowing-palette/levels/hard";
+
+import type { Progressions } from "@prisma/client";
+import type { ReactNode } from "react";
+
 import { easyLevels as energy_matrix_easy } from "@/lib/energy-matrix/levels/easy";
-import { mediumLevels as energy_matrix_medium } from "@/lib/energy-matrix/levels/medium";
 import { hardLevels as energy_matrix_hard } from "@/lib/energy-matrix/levels/hard";
-import { Progressions } from "@prisma/client";
-import { DIFFICULTIES, GAMES } from "./utils";
-import { ReactNode } from "react";
+import { mediumLevels as energy_matrix_medium } from "@/lib/energy-matrix/levels/medium";
+import { easyLevels as overflowing_palette_easy } from "@/lib/overflowing-palette/levels/easy";
+import { hardLevels as overflowing_palette_hard } from "@/lib/overflowing-palette/levels/hard";
+import { mediumLevels as overflowing_palette_medium } from "@/lib/overflowing-palette/levels/medium";
+import { easyLevels as signals_console_easy } from "@/lib/signals-console/levels/easy";
+import { hardLevels as signals_console_hard } from "@/lib/signals-console/levels/hard";
+import { mediumLevels as signals_console_medium } from "@/lib/signals-console/levels/medium";
+import { DIFFICULTIES, GAMES } from "@/lib/utils";
 
 export const BADGE_CONFIG = {
   first_steps: {
@@ -50,7 +52,7 @@ export const BADGE_CONFIG = {
   perfectionist: {
     index: 7,
     title: "Perfectionist",
-    description: "Complete absolutely all games and difficulties",
+    description: "Complete absolutely all games",
   },
 } as const;
 
@@ -68,7 +70,7 @@ const LEVEL_COUNTS: Record<string, number> = {
   energy_matrix_hard: energy_matrix_hard.length,
 };
 
-const ALL_GAME_SLUGS = GAMES.map((g) => g.slug);
+const ALL_GAME_SLUGS = GAMES.map((g) => g.type);
 
 function isComplete(
   progressions: Progressions[],

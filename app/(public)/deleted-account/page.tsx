@@ -18,8 +18,7 @@ export default async function AccountDeletedPage() {
           Account deleted
         </h1>
         <p className="mb-6 text-muted-foreground">
-          Your account has been successfully deleted. All associated data has
-          been erased.
+          Your account has been successfully deleted. All associated data has been erased.
         </p>
         <div className="flex gap-3">
           <Link href="/">
@@ -30,12 +29,12 @@ export default async function AccountDeletedPage() {
               Return to homepage
             </Button>
           </Link>
-          <Link href="/auth/login">
+          <Link href="/auth/register">
             <Button
               className="cursor-pointer dark:text-white hover:dark:bg-opacity-100 transition-all duration-300"
               variant="ghost"
             >
-              Sign in
+              Register again
             </Button>
           </Link>
         </div>

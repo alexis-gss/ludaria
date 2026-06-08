@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "sonner";
 
+import type { FormEvent } from "react";
+
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -25,7 +27,7 @@ export default function FormDelete() {
 
   if (!user) return null;
 
-  async function onDelete(e: React.FormEvent) {
+  async function onDelete(e: FormEvent) {
     e.preventDefault();
     // Confirm must be exact user’s email
     const okConfirm = confirmEmail.trim() === user?.email;

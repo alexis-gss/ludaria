@@ -1,9 +1,14 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { cookies } from "next/headers";
 
 import prisma from "@/lib/prisma";
 
-const JWT_SECRET = process.env.JWT_SECRET || "super-secret";
+const JWT_SECRET = process.env.JWT_SECRET;
+
+if (!JWT_SECRET) {
+  throw new Error("JWT_SECRET is not defined");
+}
 
 export const login = async (email: string, password: string) => {
   const user = await prisma.users.findUnique({ where: { email } });
@@ -46,3 +51,30 @@ export const getUserFromToken = async (token: string) => {
     return null;
   }
 };
+
+export type PublicUser = {
+  id: number;
+  pseudo: string;
+  email: string;
+  createdAt?: string | null;
+  updatedAt?: string | null;
+} | null;
+
+export async function getCurrentUser(): Promise<PublicUser> {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
+  if (!token) return null;
+
+  const user = await getUserFromToken(token);
+  if (!user) return null;
+
+  // Retourner uniquement les champs non sensibles, convertir les Date en ISO
+  const { id, pseudo, email, createdAt, updatedAt } = user;
+  return {
+    id,
+    pseudo,
+    email,
+    createdAt: createdAt ? new Date(createdAt).toISOString() : null,
+    updatedAt: updatedAt ? new Date(updatedAt).toISOString() : null,
+  };
+}

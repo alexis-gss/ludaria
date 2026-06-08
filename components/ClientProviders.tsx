@@ -4,6 +4,7 @@ import React from "react";
 import { Toaster } from "sonner";
 
 import type { PublicUser } from "@/components/UserProvider";
+import type { ReactNode } from "react";
 
 import { UserProvider } from "@/components/UserProvider";
 
@@ -12,7 +13,7 @@ export default function ClientProviders({
   children,
 }: {
   initialUser: PublicUser;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <UserProvider initialUser={initialUser}>

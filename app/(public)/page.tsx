@@ -23,7 +23,7 @@ function GetButtons() {
         type="button"
         asChild
       >
-        <Link href="/dashboard">Votre dashboard</Link>
+        <Link href="/dashboard">Your dashboard</Link>
       </Button>
       <Button
         className="cursor-pointer font-semibold"
@@ -32,7 +32,7 @@ function GetButtons() {
         aria-label="Your account"
         asChild
       >
-        <Link href="/profile">Votre profil</Link>
+        <Link href="/profile">Your profile</Link>
       </Button>
     </>
   ) : (
@@ -42,7 +42,7 @@ function GetButtons() {
         type="button"
         asChild
       >
-        <Link href="/register">Create an account — it’s free !</Link>
+        <Link href="/register">Create an account — it’s free!</Link>
       </Button>
       <Button
         className="cursor-pointer font-semibold"

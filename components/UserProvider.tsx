@@ -1,6 +1,8 @@
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
+
+import type { ReactNode } from "react";
 
 export type PublicUser = {
   id: number;
@@ -25,7 +27,7 @@ export function UserProvider({
   children,
 }: {
   initialUser: PublicUser;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   const [user, setUser] = useState<PublicUser>(initialUser);
   return (

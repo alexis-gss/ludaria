@@ -1,38 +1,43 @@
 "use client";
+
 import { useParams } from "next/navigation";
 import { useState } from "react";
+
 import type { DifficultyType } from "@prisma/client";
-import LevelInfo from "@/components/energy-matrix/LevelInfo";
+
+import Grid from "@/components/games/energy-matrix/Grid";
+import LevelInfo from "@/components/games/energy-matrix/LevelInfo";
 import OverlayTuto from "@/components/games/OverlayTuto";
-import Grid from "@/components/energy-matrix/Grid";
 import {
   LEVELS_BY_DIFFICULTY,
   TUTOS_BY_DIFFICULTY,
 } from "@/lib/energy-matrix/global";
+import { GAMES } from "@/lib/utils";
 
 export default function EnergyMatrixLevelPage() {
-  const slug = "energy-matrix";
   const { difficulty, level } = useParams();
+
+  const [info, setInfo] = useState<boolean>(false);
+  const [steps, setSteps] = useState<number>(1);
+
+  const slug = GAMES[1].slug;
   const diff = difficulty as DifficultyType;
   const levelNum = Number(level);
   const levels = LEVELS_BY_DIFFICULTY[diff] || [];
   const levelDef = levels.find((l) => l.id === levelNum);
-
-  const [info, setInfo] = useState(false);
-  const [steps, setSteps] = useState(1);
   const overlays = TUTOS_BY_DIFFICULTY[diff];
   const overlay = overlays[steps as keyof typeof overlays];
 
   if (!levelDef) return null;
 
   return (
-    <main className="relative min-h-screen flex flex-col items-center justify-center">
+    <main className="max-w-7xl mx-auto min-h-screen p-6 pt-18 flex flex-col items-center justify-center">
       {info && overlay ? (
         <OverlayTuto
           {...overlay}
-          onClick={() => setSteps(steps + 1)}
           steps={steps}
           maxSteps={Object.keys(overlays).length}
+          onClick={() => setSteps(steps + 1)}
         />
       ) : null}
       <div className="max-w-7xl mx-auto p-6 pt-18">

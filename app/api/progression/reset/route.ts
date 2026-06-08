@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 import type { DifficultyType, PuzzleType } from "@prisma/client";
 
-import { getCurrentUser } from "@/lib/getCurrentUser";
+import { getCurrentUser } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 
 export async function POST(req: Request) {

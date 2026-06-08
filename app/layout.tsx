@@ -2,6 +2,7 @@ import "@/app/global.scss";
 import { AnimatePresence } from "framer-motion";
 
 import type { Metadata, Viewport } from "next";
+import type { ReactNode } from "react";
 
 import Template from "@/app/template";
 import ClientProviders from "@/components/ClientProviders";
@@ -9,7 +10,7 @@ import AppFooter from "@/components/layouts/AppFooter";
 import AppHeader from "@/components/layouts/AppHeader";
 import { SoundProvider } from "@/components/SoundProvider";
 import ThemeProvider from "@/components/ThemeProvider";
-import { getCurrentUser } from "@/lib/getCurrentUser";
+import { getCurrentUser } from "@/lib/auth";
 
 const title = "Ludaria - Alexis Gousseau";
 const description =
@@ -89,7 +90,7 @@ export const viewport: Viewport = {
 };
 
 type RootLayoutProps = {
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
 export default async function RootLayout({ children }: RootLayoutProps) {

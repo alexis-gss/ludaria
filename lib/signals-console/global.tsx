@@ -56,26 +56,26 @@ export const LEVELS_BY_DIFFICULTY: Record<DifficultyType, LevelDef[]> = {
   [DifficultyType.hard]: hardLevels,
 };
 
-// Overlays par difficulté
 export const TUTOS_BY_DIFFICULTY: Record<DifficultyType, Record<number, Tuto>> = {
   [DifficultyType.easy]: {
     1: {
       width: "8rem",
       height: "5rem",
-      top: "20rem",
+      top: "21rem",
       content: `Use the ${highlightingText("reset button")} to restart the level at any time.`,
     },
     2: {
       width: "23rem",
       height: "28.3rem",
-      top: "2.7rem",
-      content: `Connect all the dots of the ${highlightingText("same color")} by clicking and dragging.`,
+      top: "3.7rem",
+      content: `Connect all the dots of the ${highlightingText("same color")} by clicking and dragging. You can only draw ${highlightingText("one path at a time")}. Drawing over an existing path will erase it.`,
     },
     3: {
-      width: "23rem",
-      height: "28.3rem",
-      top: "2.7rem",
-      content: `You can only draw ${highlightingText("one path at a time")}. Drawing over an existing path will erase it.`,
+      width: "11rem",
+      height: "2.2rem",
+      top: "-11.2rem",
+      left: "-6.10rem",
+      content: `A ${highlightingText("maximum number of moves")} is imposed in each level, you lose when the counter reaches 0.`,
     },
   },
   [DifficultyType.medium]: {

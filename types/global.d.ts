@@ -6,7 +6,6 @@ export type Game = {
   slug: string;
   icon: LucideIcon;
   title: string;
-  subtitle: string;
   description: string;
   type: PuzzleType;
 };

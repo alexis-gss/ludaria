@@ -7,17 +7,17 @@ import { useCallback, useState } from "react";
 import type { DifficultyType } from "@prisma/client";
 
 import BtnResetGrid from "@/components/games/BtnResetGrid";
-import CanvasGrid, { type Path } from "@/components/games/signals-console/CanvasGrid";
 import EndLevelModal from "@/components/games/EndLevelModal";
 import LevelInfo from "@/components/games/LevelInfo";
 import OverlayTuto from "@/components/games/OverlayTuto";
+import CanvasGrid, { type Path } from "@/components/games/signals-console/CanvasGrid";
 import { useProgressionGuard } from "@/hooks/use-progression-guard";
 import { useSaveProgression } from "@/hooks/use-save-progression";
 import {
   LEVELS_BY_DIFFICULTY,
   TUTOS_BY_DIFFICULTY,
-} from "@/lib/signals-console/global";
-import { GAMES } from "@/lib/utils";
+} from "@/lib/signals-console/variables";
+import { GAMES } from "@/lib/variables";
 
 export default function SignalsConsoleLevelPage() {
   const { difficulty, level } = useParams();

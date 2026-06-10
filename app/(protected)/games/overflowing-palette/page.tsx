@@ -3,8 +3,8 @@
 import type { ReactNode } from "react";
 
 import DifficultyPage from "@/components/games/DifficultyPage";
-import { LEVELS_BY_DIFFICULTY } from "@/lib/overflowing-palette/global";
-import { GAMES } from "@/lib/utils";
+import { LEVELS_BY_DIFFICULTY } from "@/lib/overflowing-palette/variables";
+import { GAMES } from "@/lib/variables";
 
 export default function OverflowingPalette(): ReactNode {
   return (

@@ -6,8 +6,8 @@ import type { LevelDef } from "@/types/signals-console";
 import type { MouseEvent, TouchEvent } from "react";
 
 
-import { COLOR_HEX } from "@/lib/signals-console/global";
-import { drawBlackCell, drawRoundedRect } from "@/lib/utils";
+import { drawBlackCell, drawRoundedRect } from "@/lib/draw-utils";
+import { COLOR_HEX } from "@/lib/signals-console/variables";
 
 interface GridProps {
   level: LevelDef;

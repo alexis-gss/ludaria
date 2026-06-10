@@ -1,10 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
-import type { FormEvent } from "react";
+import type { SubmitEvent } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -27,19 +27,18 @@ export default function FormDelete() {
 
   if (!user) return null;
 
-  async function onDelete(e: FormEvent) {
+  async function onDelete(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
-    // Confirm must be exact user’s email
     const okConfirm = confirmEmail.trim() === user?.email;
     if (!okConfirm) {
-      toast.error("Confirmation invalide", {
-        description: "Tapez votre email pour confirmer.",
+      toast.error("Invalid confirmation", {
+        description: "Type your email to confirm.",
       });
       return;
     }
     if (!currentPassword) {
-      toast.error("Mot de passe requis", {
-        description: "Saisissez votre mot de passe.",
+      toast.error("Password required", {
+        description: "Enter your password.",
       });
       return;
     }
@@ -56,8 +55,8 @@ export default function FormDelete() {
 
       const json = await res.json().catch(() => null);
       if (!res.ok) {
-        toast.error("Erreur", {
-          description: json?.error ?? "Impossible de supprimer le compte.",
+        toast.error("Error", {
+          description: json?.error ?? "Unable to delete account.",
         });
         setLoading(false);
         return;
@@ -69,8 +68,8 @@ export default function FormDelete() {
       router.push("/deleted-account");
     } catch (err) {
       console.error("Delete account error:", err);
-      toast.error("Erreur", {
-        description: "Impossible de supprimer le compte.",
+      toast.error("Error", {
+        description: "Unable to delete account.",
       });
     } finally {
       setLoading(false);
@@ -104,17 +103,17 @@ export default function FormDelete() {
             </FieldDescription>
           </Field>
           <Field>
-            <FieldLabel htmlFor="currentPassword">Mot de passe</FieldLabel>
+            <FieldLabel htmlFor="currentPassword">Password</FieldLabel>
             <Input
               id="currentPassword"
               type="password"
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
-              placeholder="Votre mot de passe"
+              placeholder="Your password"
               className="mt-1"
             />
             <FieldDescription>
-              Entrez votre mot de passe pour valider cette action.
+              Enter your password to validate this action.
             </FieldDescription>
           </Field>
         </FieldGroup>
@@ -125,7 +124,7 @@ export default function FormDelete() {
             type="submit"
             disabled={loading}
           >
-            {loading ? "Suppression…" : "Supprimer mon compte"}
+            {loading ? "Deleting…" : "Delete My Account"}
           </Button>
           <Button
             className="cursor-pointer transition-all duration-300"
@@ -137,7 +136,7 @@ export default function FormDelete() {
               setCurrentPassword("");
             }}
           >
-            Annuler
+            Cancel
           </Button>
         </FieldGroup>
       </FieldSet>

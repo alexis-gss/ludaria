@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useAnimation } from "framer-motion";
-import { Lock } from "lucide-react";
+import { LockIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import type { ReactNode } from "react";
@@ -11,7 +11,8 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { BADGE_CONFIG, Badges, type BadgeId } from "@/lib/badges";
+import { BadgesSVG, type BadgeId } from "@/lib/badges";
+import { BADGES } from "@/lib/variables";
 
 function FlipBadge({
   children,
@@ -67,11 +68,11 @@ export default function UserBadges() {
       <p className="text-center text-sm text-gray-400 mb-2">
         Your achievements:
       </p>
-      <div className="flex flex-row justify-center items-center gap-4">
+      <div className="flex flex-wrap justify-center items-center gap-4">
         {(
-          Object.entries(BADGE_CONFIG) as [
+          Object.entries(BADGES) as [
             BadgeId,
-            (typeof BADGE_CONFIG)[BadgeId],
+            (typeof BADGES)[BadgeId],
           ][]
         ).map(([id, { index, title, description }]) => {
           const isUnlocked = unlocked.includes(id);
@@ -80,10 +81,10 @@ export default function UserBadges() {
               <TooltipTrigger asChild>
                 <div className="relative">
                   <FlipBadge className={isUnlocked ? "" : "grayscale"}>
-                    {Badges[index]}
+                    {BadgesSVG[index]}
                   </FlipBadge>
                   {!isUnlocked && (
-                    <Lock className="absolute bottom-0 right-0 w-4 h-4 text-gray-400 z-10" />
+                    <LockIcon className="absolute bottom-0 right-0 w-4 h-4 text-gray-400 z-10" />
                   )}
                 </div>
               </TooltipTrigger>

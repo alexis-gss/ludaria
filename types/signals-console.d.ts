@@ -4,4 +4,4 @@ export interface LevelDef {
   id: number;
   grid: CellColor[][];
   moves: number;
-}
+};

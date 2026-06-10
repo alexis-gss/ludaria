@@ -20,7 +20,10 @@ import { cn } from "@/lib/utils";
 export default function AppNavigation() {
   const { user } = useUser();
   const [isOpen, setIsOpen] = useState(false);
+
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
   const menuLinks = user
     ? [
       { href: "/", label: "Home" },
@@ -66,7 +69,9 @@ export default function AppNavigation() {
       if (
         isOpen &&
         buttonRef.current &&
-        !buttonRef.current.contains(e.target as Node)
+        !buttonRef.current.contains(e.target as Node) &&
+        menuRef.current &&
+        !menuRef.current.contains(e.target as Node)
       ) {
         setIsOpen(false);
       }
@@ -162,6 +167,7 @@ export default function AppNavigation() {
           {/* Popup Menu mobile */}
           {isOpen ? (
             <motion.div
+              ref={menuRef}
               initial={{ opacity: 0, scale: 0.95, y: -10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: -10 }}

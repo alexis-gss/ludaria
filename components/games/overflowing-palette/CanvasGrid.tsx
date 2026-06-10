@@ -7,8 +7,9 @@ import type { MouseEvent } from "react";
 
 
 import { useSound } from "@/components/SoundProvider";
-import { COLOR_HEX } from "@/lib/overflowing-palette/global";
-import { cn, drawBlackCell } from "@/lib/utils";
+import { drawBlackCell } from "@/lib/draw-utils";
+import { COLOR_HEX } from "@/lib/overflowing-palette/variables";
+import { cn } from "@/lib/utils";
 
 interface CanvasGridProps {
   grid: CellColor[][];

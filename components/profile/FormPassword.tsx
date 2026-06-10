@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
-import type { FormEvent } from "react";
+import type { SubmitEvent } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -26,12 +26,12 @@ export default function FormPassword() {
   const pwRules = getPasswordRules(newPassword, confirmPassword);
   const passwordValid = isPasswordStrong(newPassword, confirmPassword);
 
-  async function onChangePassword(e: FormEvent) {
+  async function submit(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!passwordValid) {
-      toast.error("Mot de passe invalide", {
+      toast.error("Invalid password", {
         description:
-          "Vérifiez que le nouveau mot de passe respecte toutes les règles et que la confirmation est correcte.",
+          "Make sure the new password meets all the requirements and that the confirmation is correct.",
       });
       return;
     }
@@ -44,18 +44,18 @@ export default function FormPassword() {
       });
       if (!res.ok) {
         const err = await res.json().catch(() => null);
-        throw new Error(err?.error ?? `Erreur ${res.status}`);
+        throw new Error(err?.error ?? `Error ${res.status}`);
       }
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
-      toast.success("Mot de passe mis à jour", {
-        description: "Votre mot de passe a été modifié avec succès.",
+      toast.success("Password updated", {
+        description: "Your password has been changed successfully.",
       });
     } catch (err) {
       console.error("Password change error:", err);
-      toast.error("Erreur", {
-        description: "Impossible de changer le mot de passe.",
+      toast.error("Error", {
+        description: "Unable to change the password.",
       });
     } finally {
       setPwLoading(false);
@@ -63,19 +63,18 @@ export default function FormPassword() {
   }
 
   return (
-    <form onSubmit={onChangePassword} className="space-y-4">
+    <form onSubmit={submit} className="space-y-4">
       <FieldSet>
         <FieldLegend className="font-bold tracking-tight">
-          Mot de passe du profil
+          Profile Password
         </FieldLegend>
         <FieldDescription className="whitespace-pre-line">
-          Changez votre mot de passe pour sécuriser votre compte. Assurez-vous
-          de respecter toutes les règles ci-dessous.
+          Change your password to secure your account. Make sure to follow all the rules below.
         </FieldDescription>
         <FieldGroup className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-6">
           <Field>
             <FieldLabel htmlFor="currentPassword">
-              Mot de passe actuel
+              Current Password
             </FieldLabel>
             <Input
               id="currentPassword"
@@ -83,32 +82,31 @@ export default function FormPassword() {
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
               className="mt-1"
-              placeholder="Entrez votre mot de passe actuel"
+              placeholder="Enter your current password"
             />
             <FieldDescription>
-              Saisissez votre mot de passe actuel pour confirmer votre identité.
+              Enter your current password to confirm your identity.
             </FieldDescription>
           </Field>
         </FieldGroup>
         <FieldGroup className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-6">
           <Field>
-            <FieldLabel htmlFor="newPassword">Nouveau mot de passe</FieldLabel>
+            <FieldLabel htmlFor="newPassword">New Password</FieldLabel>
             <Input
               id="newPassword"
               type="password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               className="mt-1"
-              placeholder="Entrez un nouveau mot de passe"
+              placeholder="Enter your new password"
             />
             <FieldDescription>
-              Choisissez un mot de passe sécurisé respectant les critères
-              ci-dessous.
+              Choose a secure password that meets the criteria below.
             </FieldDescription>
           </Field>
           <Field>
             <FieldLabel htmlFor="confirmPassword">
-              Confirmer le nouveau mot de passe
+              Confirm New Password
             </FieldLabel>
             <Input
               id="confirmPassword"
@@ -116,10 +114,10 @@ export default function FormPassword() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="mt-1"
-              placeholder="Confirmez votre nouveau mot de passe"
+              placeholder="Confirm your new password"
             />
             <FieldDescription>
-              Saisissez à nouveau le mot de passe pour confirmer.
+              Enter your new password again to confirm.
             </FieldDescription>
           </Field>
         </FieldGroup>
@@ -130,25 +128,25 @@ export default function FormPassword() {
             >
               {pwRules.length ? "✓" : "✗"}
             </span>
-            <span>Au moins 12 caractères</span>
+            <span>At least 12 characters</span>
           </div>
           <div className="flex items-center gap-2">
             <span className={pwRules.upper ? "text-green-600" : "text-red-500"}>
               {pwRules.upper ? "✓" : "✗"}
             </span>
-            <span>Une lettre majuscule</span>
+            <span>At least one uppercase letter</span>
           </div>
           <div className="flex items-center gap-2">
             <span className={pwRules.lower ? "text-green-600" : "text-red-500"}>
               {pwRules.lower ? "✓" : "✗"}
             </span>
-            <span>Une lettre minuscule</span>
+            <span>At least one lowercase letter</span>
           </div>
           <div className="flex items-center gap-2">
             <span className={pwRules.digit ? "text-green-600" : "text-red-500"}>
               {pwRules.digit ? "✓" : "✗"}
             </span>
-            <span>Un chiffre</span>
+            <span>At least one digit</span>
           </div>
           <div className="flex items-center gap-2">
             <span
@@ -156,7 +154,7 @@ export default function FormPassword() {
             >
               {pwRules.special ? "✓" : "✗"}
             </span>
-            <span>Un caractère spécial (ex: !@#$%)</span>
+            <span>At least one special character (e.g., !@#$%)</span>
           </div>
           <div className="flex items-center gap-2">
             <span
@@ -166,21 +164,21 @@ export default function FormPassword() {
             >
               {pwRules.confirmMatch ? "✓" : "✗"}
             </span>
-            <span>Confirmation identique</span>
+            <span>Confirmation identical</span>
           </div>
         </FieldGroup>
         <FieldGroup className="flex flex-col sm:flex-row md:flex-row justify-center md:justify-start items-center gap-2">
           <Button
             className="cursor-pointer transition-all duration-300"
-            aria-label="Modifier le mot de passe"
+            aria-label="Modify Password"
             type="submit"
             disabled={pwLoading || !passwordValid}
           >
-            {pwLoading ? "Modification…" : "Modifier le mot de passe"}
+            {pwLoading ? "Modification…" : "Modify Password"}
           </Button>
           <Button
             className="cursor-pointer transition-all duration-300"
-            aria-label="Annuler"
+            aria-label="Cancel password modification"
             type="button"
             variant="ghost"
             onClick={() => {
@@ -189,7 +187,7 @@ export default function FormPassword() {
               setConfirmPassword("");
             }}
           >
-            Annuler
+            Cancel
           </Button>
         </FieldGroup>
       </FieldSet>

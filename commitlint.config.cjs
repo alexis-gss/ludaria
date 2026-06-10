@@ -1,1 +1,1 @@
-module.exports = require('@alexis-gss/husky-config/commitlint.config.cjs');
+import "@alexis-gss/husky-config/commitlint.config.cjs";

@@ -2,8 +2,9 @@
 
 import { motion } from "framer-motion";
 
-import { drawOctagon } from "@/components/games/energy-matrix/draw-utils";
 import type { ShapeDef } from "@/types/energy-matrix";
+
+import { drawOctagon } from "@/lib/draw-utils";
 
 interface SelectorsProps {
   available: ShapeDef[];
@@ -63,10 +64,10 @@ export default function Selectors({
             onClick={() => onSelectShape?.(i)}
             className={`relative p-2 border rounded-xl cursor-pointer bg-slate-800 transition-colors
               ${
-                i === selected
-                  ? "border-indigo-400 shadow-[0_0_10px_rgba(99,102,241,0.6)]"
-                  : "border-slate-700 hover:border-slate-500"
-              }`}
+          i === selected
+            ? "border-indigo-400 shadow-[0_0_10px_rgba(99,102,241,0.6)]"
+            : "border-slate-700 hover:border-slate-500"
+          }`}
             whileHover={{ scale: 1.08 }}
           >
             <canvas

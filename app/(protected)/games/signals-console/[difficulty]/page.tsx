@@ -1,13 +1,17 @@
 "use client";
 
+import { notFound } from "next/navigation";
+
 import type { ReactNode } from "react";
 
 import LevelsPage from "@/components/games/LevelsPage";
-import { LEVELS_BY_DIFFICULTY } from "@/lib/signals-console/global";
-import { GAMES } from "@/lib/utils";
+import { LEVELS_BY_DIFFICULTY } from "@/lib/signals-console/variables";
+import { GAMES } from "@/lib/variables";
 
-const game = GAMES.find((g) => g.slug === "signals-console")!;
+const game = GAMES.find((game) => game.slug === "signals-console");
 
 export default function DifficultyPage(): ReactNode {
+  if (!game) notFound();
+
   return <LevelsPage name={game.title} targetLevels={LEVELS_BY_DIFFICULTY} />;
 }

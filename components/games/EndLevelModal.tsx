@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 const MESSAGES = {
   "energy-matrix": {
     victory: [
-      "🎉 Grid filled — perfect placement!",
+      "🎉 Grid filled, perfect placement!",
       "⚡ Every block fits like a glove!",
       "💪 Flawless shapes, matrix champ!",
       "🔥 That was smoother than a clean stack!",
@@ -26,7 +26,7 @@ const MESSAGES = {
   },
   "overflowing-palette": {
     victory: [
-      "🎉 Nailed it — the colors obey you now!",
+      "🎉 Nailed it, the colors obey you now!",
       "🌈 You painted that level perfectly!",
       "💪 Flawless clicks, color champ!",
       "🔥 That was smoother than a rainbow fade!",
@@ -42,7 +42,7 @@ const MESSAGES = {
   },
   "signals-console": {
     victory: [
-      "🎉 All signals connected — perfect sync!",
+      "🎉 All signals connected, perfect sync!",
       "⚡ Every path linked without a glitch!",
       "💪 Flawless routing, signal champ!",
       "🔥 That was smoother than a clean circuit!",

@@ -12,7 +12,7 @@ import CardSwap from "@/components/ui/card-swap";
 import ColorBends from "@/components/ui/color-bends";
 import Magnet from "@/components/ui/magnet";
 import { useUser } from "@/components/UserProvider";
-import { GAMES } from "@/lib/utils";
+import { GAMES } from "@/lib/variables";
 
 function GetButtons() {
   const { user } = useUser();
@@ -42,7 +42,7 @@ function GetButtons() {
         type="button"
         asChild
       >
-        <Link href="/register">Create an account — it’s free!</Link>
+        <Link href="/register">Create an account, it’s free!</Link>
       </Button>
       <Button
         className="cursor-pointer font-semibold"
@@ -76,13 +76,13 @@ export default function Page() {
       title: "Difficulty levels",
       icon: BoxesIcon,
       description:
-        "Three difficulty levels for each puzzle — perfect for beginners, intermediate, and experts.",
+        "Three difficulty levels for each puzzle, perfect for beginners, intermediate, and experts.",
     },
     {
       title: "Progress saved",
       icon: SaveIcon,
       description:
-        "Each completed level is linked to your account — no matter your device, continue where you left off.",
+        "Each completed level is linked to your account, no matter your device, continue where you left off.",
     },
   ];
 
@@ -140,7 +140,7 @@ export default function Page() {
               transition={{ delay: 0.1, duration: 0.6 }}
               className="text-4xl sm:text-5xl font-extrabold tracking-tight leading-tight"
             >
-              Ludaria —{" "}
+              Ludaria -{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500">
                 colorful puzzles
               </span>{" "}
@@ -333,7 +333,7 @@ export default function Page() {
                   450 progressive puzzles
                 </span>{" "}
                 across 3 colorful and animated mini-games. Your progress is
-                saved online to your account — play, progres, color.
+                saved online to your account, play, progres, color.
               </p>
               <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                 {GetButtons()}

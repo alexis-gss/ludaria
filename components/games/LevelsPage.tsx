@@ -1,8 +1,8 @@
 "use client";
 
-import { Check, Lock } from "lucide-react";
-import { useEffect, useState } from "react";
+import { CheckIcon, LockIcon } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 import type { AnyLevelDef } from "@/types/global";
 import type { DifficultyType, PuzzleType } from "@prisma/client";
@@ -118,9 +118,9 @@ export default function LevelsPage({
                 <span className="text-sm">({lvl.moves} moves)</span>
               )}
               {locked ? (
-                <Lock className="absolute bottom-2 right-2 w-5 h-5 text-gray-400" />
+                <LockIcon className="absolute bottom-2 right-2 w-5 h-5 text-gray-400" />
               ) : isCompleted ? (
-                <Check className="absolute bottom-2 right-2 w-5 h-5" />
+                <CheckIcon className="absolute bottom-2 right-2 w-5 h-5" />
               ) : null}
             </Button>
           );

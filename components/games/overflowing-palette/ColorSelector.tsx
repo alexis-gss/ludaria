@@ -10,8 +10,8 @@ import type { DifficultyType } from "@prisma/client";
 import type { ReactNode } from "react";
 
 import { Kbd } from "@/components/ui/kbd";
-import { COLOR_CLASSES } from "@/lib/overflowing-palette/global";
-import { DIFFICULTIES } from "@/lib/utils";
+import { COLOR_CLASSES } from "@/lib/overflowing-palette/variables";
+import { DIFFICULTIES } from "@/lib/variables";
 
 interface ColorSelectorProps {
   selectedColor: CellColor;

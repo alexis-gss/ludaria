@@ -89,7 +89,7 @@ export const TUTOS_BY_DIFFICULTY: Record<DifficultyType, Record<number, Tuto>> =
       width: "23rem",
       height: "28.3rem",
       top: "3.7rem",
-      content: `Black cells are ${highlightingText("walls")} — no path can pass through them.`,
+      content: `Black cells are ${highlightingText("walls")}, no path can pass through them.`,
     },
   },
   [DifficultyType.hard]: {

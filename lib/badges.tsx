@@ -11,52 +11,9 @@ import { mediumLevels as overflowing_palette_medium } from "@/lib/overflowing-pa
 import { easyLevels as signals_console_easy } from "@/lib/signals-console/levels/easy";
 import { hardLevels as signals_console_hard } from "@/lib/signals-console/levels/hard";
 import { mediumLevels as signals_console_medium } from "@/lib/signals-console/levels/medium";
-import { DIFFICULTIES, GAMES } from "@/lib/utils";
+import { BADGES, DIFFICULTIES, GAMES } from "@/lib/variables";
 
-export const BADGE_CONFIG = {
-  first_steps: {
-    index: 0,
-    title: "First Steps",
-    description: "Complete at least one level",
-  },
-  easy: {
-    index: 1,
-    title: "Easy",
-    description: "Complete all easy levels of a game",
-  },
-  medium: {
-    index: 2,
-    title: "Medium",
-    description: "Complete all medium levels of a game",
-  },
-  hard: {
-    index: 3,
-    title: "Hard",
-    description: "Complete all hard levels of a game",
-  },
-  overflowing_palette: {
-    index: 4,
-    title: "Overflowing Palette",
-    description: "Complete all levels of the Overflowing Palette game",
-  },
-  energy_matrix: {
-    index: 5,
-    title: "Energy Matrix",
-    description: "Complete all levels of the Energy Matrix game",
-  },
-  signals_console: {
-    index: 6,
-    title: "Signals Console",
-    description: "Complete all levels of the Signals Console game",
-  },
-  perfectionist: {
-    index: 7,
-    title: "Perfectionist",
-    description: "Complete absolutely all games",
-  },
-} as const;
-
-export type BadgeId = keyof typeof BADGE_CONFIG;
+export type BadgeId = keyof typeof BADGES;
 
 const LEVEL_COUNTS: Record<string, number> = {
   signals_console_easy: signals_console_easy.length,
@@ -172,12 +129,12 @@ function DifficultyBolts({
   );
 }
 
-export const BADGE_ELEMENTS: Record<BadgeId, ReactNode> = {
+const BADGE_ELEMENTS: Record<BadgeId, ReactNode> = {
   first_steps: (
     <svg {...SVG_PROPS} aria-hidden="true">
       <defs>
-        <title>{BADGE_CONFIG.first_steps.title}</title>
-        <desc>{BADGE_CONFIG.first_steps.description}</desc>
+        <title>{BADGES.first_steps.title}</title>
+        <desc>{BADGES.first_steps.description}</desc>
       </defs>
       <BadgeShell />
       <polygon
@@ -191,8 +148,8 @@ export const BADGE_ELEMENTS: Record<BadgeId, ReactNode> = {
   easy: (
     <svg {...SVG_PROPS} aria-hidden="true">
       <defs>
-        <title>{BADGE_CONFIG.easy.title}</title>
-        <desc>{BADGE_CONFIG.easy.description}</desc>
+        <title>{BADGES.easy.title}</title>
+        <desc>{BADGES.easy.description}</desc>
       </defs>
       <BadgeShell />
       <DifficultyBolts count={1} color="#22c55e" stroke="#16a34a" />
@@ -201,8 +158,8 @@ export const BADGE_ELEMENTS: Record<BadgeId, ReactNode> = {
   medium: (
     <svg {...SVG_PROPS} aria-hidden="true">
       <defs>
-        <title>{BADGE_CONFIG.medium.title}</title>
-        <desc>{BADGE_CONFIG.medium.description}</desc>
+        <title>{BADGES.medium.title}</title>
+        <desc>{BADGES.medium.description}</desc>
       </defs>
       <BadgeShell />
       <DifficultyBolts count={2} color="#f97316" stroke="#ea580c" />
@@ -211,8 +168,8 @@ export const BADGE_ELEMENTS: Record<BadgeId, ReactNode> = {
   hard: (
     <svg {...SVG_PROPS} aria-hidden="true">
       <defs>
-        <title>{BADGE_CONFIG.hard.title}</title>
-        <desc>{BADGE_CONFIG.hard.description}</desc>
+        <title>{BADGES.hard.title}</title>
+        <desc>{BADGES.hard.description}</desc>
       </defs>
       <BadgeShell />
       <DifficultyBolts count={3} color="#ef4444" stroke="#dc2626" />
@@ -221,8 +178,8 @@ export const BADGE_ELEMENTS: Record<BadgeId, ReactNode> = {
   overflowing_palette: (
     <svg {...SVG_PROPS} aria-hidden="true">
       <defs>
-        <title>{BADGE_CONFIG.overflowing_palette.title}</title>
-        <desc>{BADGE_CONFIG.overflowing_palette.description}</desc>
+        <title>{BADGES.overflowing_palette.title}</title>
+        <desc>{BADGES.overflowing_palette.description}</desc>
       </defs>
       <BadgeShell />
       <ellipse cx="60" cy="62" rx="28" ry="22" fill="white" />
@@ -238,8 +195,8 @@ export const BADGE_ELEMENTS: Record<BadgeId, ReactNode> = {
   energy_matrix: (
     <svg {...SVG_PROPS} aria-hidden="true">
       <defs>
-        <title>{BADGE_CONFIG.energy_matrix.title}</title>
-        <desc>{BADGE_CONFIG.energy_matrix.description}</desc>
+        <title>{BADGES.energy_matrix.title}</title>
+        <desc>{BADGES.energy_matrix.description}</desc>
       </defs>
       <BadgeShell />
       <rect x="35" y="35" width="14" height="32" rx="2" fill="#ec4899" />
@@ -253,8 +210,8 @@ export const BADGE_ELEMENTS: Record<BadgeId, ReactNode> = {
   signals_console: (
     <svg {...SVG_PROPS} aria-hidden="true">
       <defs>
-        <title>{BADGE_CONFIG.signals_console.title}</title>
-        <desc>{BADGE_CONFIG.signals_console.description}</desc>
+        <title>{BADGES.signals_console.title}</title>
+        <desc>{BADGES.signals_console.description}</desc>
       </defs>
       <BadgeShell />
       <path
@@ -289,8 +246,8 @@ export const BADGE_ELEMENTS: Record<BadgeId, ReactNode> = {
   ),
   perfectionist: (
     <svg {...SVG_PROPS} aria-hidden="true">
-      <title>{BADGE_CONFIG.perfectionist.title}</title>
-      <desc>{BADGE_CONFIG.perfectionist.description}</desc>
+      <title>{BADGES.perfectionist.title}</title>
+      <desc>{BADGES.perfectionist.description}</desc>
       <BadgeShell />
       <path
         d="M44,38 L76,38 L72,62 Q60,70 48,62 Z"
@@ -339,13 +296,13 @@ export const BADGE_ELEMENTS: Record<BadgeId, ReactNode> = {
 
 /**
  * Ordered array for use cases that need index-based access.
- * Order matches BADGE_CONFIG[id].index.
+ * Order matches BADGES[id].index.
  */
-export const Badges = Object.values(BADGE_CONFIG)
+export const BadgesSVG = Object.values(BADGES)
   .sort((a, b) => a.index - b.index)
   .map(({ title }) => {
-    const id = Object.keys(BADGE_CONFIG).find(
-      (k) => BADGE_CONFIG[k as BadgeId].title === title,
+    const id = Object.keys(BADGES).find(
+      (k) => BADGES[k as BadgeId].title === title,
     ) as BadgeId;
     return BADGE_ELEMENTS[id];
   });

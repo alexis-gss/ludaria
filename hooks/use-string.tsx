@@ -1,4 +1,3 @@
-// * Packages
 import pluralize, { singular } from "pluralize";
 import slugify from "slugify";
 
@@ -195,7 +194,7 @@ export default function str(initialValue: string): Stringable {
   /**
    * Split string into multiple segments.
    * @param string string
-   * @returns string[]
+   * @return string[]
    */
   const splitIntoSegments = (string: string): string[] =>
     string.split(/[-_\s]+/).filter(Boolean);

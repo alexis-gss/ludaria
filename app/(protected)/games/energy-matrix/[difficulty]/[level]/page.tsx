@@ -6,8 +6,8 @@ import { useCallback, useState } from "react";
 
 import type { DifficultyType } from "@prisma/client";
 
-import CanvasGrid from "@/components/games/energy-matrix/CanvasGrid";
 import EndLevelModal from "@/components/games/EndLevelModal";
+import CanvasGrid from "@/components/games/energy-matrix/CanvasGrid";
 import LevelInfo from "@/components/games/LevelInfo";
 import OverlayTuto from "@/components/games/OverlayTuto";
 import { useProgressionGuard } from "@/hooks/use-progression-guard";
@@ -15,8 +15,8 @@ import { useSaveProgression } from "@/hooks/use-save-progression";
 import {
   LEVELS_BY_DIFFICULTY,
   TUTOS_BY_DIFFICULTY,
-} from "@/lib/energy-matrix/global";
-import { GAMES } from "@/lib/utils";
+} from "@/lib/energy-matrix/variables";
+import { GAMES } from "@/lib/variables";
 
 export default function EnergyMatrixLevelPage() {
   const { difficulty, level } = useParams();

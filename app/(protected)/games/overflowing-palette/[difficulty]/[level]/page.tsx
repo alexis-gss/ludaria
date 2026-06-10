@@ -8,25 +8,25 @@ import type { CellColor } from "@/types/overflowing-palette";
 import type { DifficultyType } from "@prisma/client";
 
 import BtnResetGrid from "@/components/games/BtnResetGrid";
-import CanvasGrid from "@/components/games/overflowing-palette/CanvasGrid";
-import ColorSelector from "@/components/games/overflowing-palette/ColorSelector";
 import EndLevelModal from "@/components/games/EndLevelModal";
 import LevelInfo from "@/components/games/LevelInfo";
+import CanvasGrid from "@/components/games/overflowing-palette/CanvasGrid";
+import ColorSelector from "@/components/games/overflowing-palette/ColorSelector";
 import OverlayTuto from "@/components/games/OverlayTuto";
-import { useProgressionGuard } from "@/hooks/use-progression-guard";
-import { useSaveProgression } from "@/hooks/use-save-progression";
-import {
-  COLOR_CLASSES,
-  LEVELS_BY_DIFFICULTY,
-  TUTOS_BY_DIFFICULTY,
-} from "@/lib/overflowing-palette/global";
-import { GAMES } from "@/lib/utils";
-import str from "@/hooks/use-string";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useProgressionGuard } from "@/hooks/use-progression-guard";
+import { useSaveProgression } from "@/hooks/use-save-progression";
+import str from "@/hooks/use-string";
+import {
+  COLOR_CLASSES,
+  LEVELS_BY_DIFFICULTY,
+  TUTOS_BY_DIFFICULTY,
+} from "@/lib/overflowing-palette/variables";
+import { GAMES } from "@/lib/variables";
 
 export default function OverflowingPaletteLevelPage() {
   const { difficulty, level } = useParams();

@@ -10,7 +10,13 @@ import { ExpandingColumn } from "@/components/ExpandingColumn";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import UserBadges from "@/components/UserBadges";
-import { DIFFICULTIES, GAMES } from "@/lib/utils";
+import { DIFFICULTIES, GAMES } from "@/lib/variables";
+
+const globalModules: Record<string, () => Promise<{ LEVELS_BY_DIFFICULTY: Record<string, unknown[]> }>> = {
+  [GAMES[0].slug]: () => import("@/lib/overflowing-palette/variables"),
+  [GAMES[1].slug]: () => import("@/lib/energy-matrix/variables"),
+  [GAMES[2].slug]: () => import("@/lib/signals-console/variables"),
+};
 
 export default function DashboardPage() {
   const [progress, setProgress] = useState<Record<string, number>>({});
@@ -37,10 +43,8 @@ export default function DashboardPage() {
             const lvl = data[game.type]?.[diff] ?? 0;
             totalCompleted += lvl;
 
-            const levelsCount =
-              (await import(`@/lib/${game.slug}/global`)).LEVELS_BY_DIFFICULTY[
-                diff
-              ]?.length ?? 0;
+            const mod = await globalModules[game.slug]?.();
+            const levelsCount = mod?.LEVELS_BY_DIFFICULTY[diff]?.length ?? 0;
             totalLevels += levelsCount;
           }
 

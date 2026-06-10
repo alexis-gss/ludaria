@@ -1,4 +1,4 @@
-export type PasswordRules = {
+type PasswordRules = {
   length: boolean;
   upper: boolean;
   lower: boolean;
@@ -25,8 +25,8 @@ export function getPasswordRules(
 }
 
 export function isPasswordStrong(password: string, confirm?: string) {
-  const r = getPasswordRules(password, confirm);
+  const rules = getPasswordRules(password, confirm);
   return (
-    r.length && r.upper && r.lower && r.digit && r.special && r.confirmMatch
+    rules.length && rules.upper && rules.lower && rules.digit && rules.special && rules.confirmMatch
   );
 }

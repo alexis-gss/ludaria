@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CalendarDays, RefreshCw } from "lucide-react";
+import { CalendarDaysIcon, RefreshCwIcon } from "lucide-react";
 import { useState } from "react";
 
 import type { ReactNode} from "react";
@@ -57,7 +57,7 @@ export default function ProfilePage() {
         {/* DATES */}
         <Card className="flex flex-col md:flex-row md:items-center gap-4 bg-muted/30 border border-border/50 rounded-xl p-4 mt-4 mx-auto md:ms-0 w-fit">
           <div className="flex justify-center md:justify-start items-center gap-2">
-            <CalendarDays className="w-5 h-5 text-muted-foreground" />
+            <CalendarDaysIcon className="w-5 h-5 text-muted-foreground" />
             <span className="text-start text-sm text-muted-foreground">
               Member since{" "}
               <strong>{useFormatedDate(userCreatedAt.toString())}</strong>
@@ -65,7 +65,7 @@ export default function ProfilePage() {
           </div>
           <div className="hidden md:block w-px h-5 bg-border" />
           <div className="flex justify-center md:justify-start items-center gap-2">
-            <RefreshCw className="w-5 h-5 text-muted-foreground" />
+            <RefreshCwIcon className="w-5 h-5 text-muted-foreground" />
             <span className="text-start text-sm text-muted-foreground">
               Last updated on{" "}
               <strong>{useFormatedDate(userUpdatedAt.toString())}</strong>

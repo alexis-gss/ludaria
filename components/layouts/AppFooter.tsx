@@ -2,6 +2,7 @@
 
 import {
   SiFramer,
+  SiGithub,
   SiNextdotjs,
   SiPrisma,
   SiReact,
@@ -10,7 +11,7 @@ import {
   SiTailwindcss,
   SiTypescript,
 } from "@icons-pack/react-simple-icons";
-import { FileTextIcon, GithubIcon, HeartIcon } from "lucide-react";
+import { FileTextIcon, HeartIcon } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -67,7 +68,7 @@ export default function AppFooter() {
         <div>
           <h3 className="font-bold text-lg">Ludaria</h3>
           <p className="mt-2 text-sm opacity-80">
-            Play, progress, and save your levels. 3 difficulties × 50 levels —
+            Play, progress, and save your levels. 3 difficulties × 50 levels;
             more than 150 challenges.
           </p>
           <p className="flex justify-start items-center text-sm opacity-80 mt-2">
@@ -85,7 +86,7 @@ export default function AppFooter() {
             ariaLabel="Technology used"
           />
           <p className="text-xs opacity-60 mt-3">
-            © {currentYear} Ludaria — All rights reserved
+            © {currentYear} Ludaria - All rights reserved
           </p>
         </div>
         <div>
@@ -112,7 +113,7 @@ export default function AppFooter() {
         <div>
           <h4 className="font-semibold">About</h4>
           <p className="mt-3 text-sm opacity-85">
-            Account-linked save — persistent progress and retro-compatible
+            Account-linked save, persistent progress and retro-compatible
             levels. 3×50 levels for each puzzles.
           </p>
           <div className="mt-4 flex gap-2">
@@ -144,7 +145,7 @@ export default function AppFooter() {
                 target="_blank"
                 rel="noreferrer"
               >
-                <GithubIcon size={16} /> Github
+                <SiGithub size={16} /> Github
               </a>
             </Button>
           </div>

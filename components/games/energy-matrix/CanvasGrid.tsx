@@ -4,9 +4,8 @@ import { useRef, useEffect, useState, useCallback, useMemo } from "react";
 
 import type { LevelDef, Offset } from "@/types/energy-matrix";
 
-import { drawOctagon } from "@/components/games/energy-matrix/draw-utils";
-
 import Selectors from "@/components/games/energy-matrix/Selectors";
+import { drawOctagon } from "@/lib/draw-utils";
 
 const rotate = (offsets: Offset[], t = 1) => {
   let res = offsets.map((o) => ({ ...o }));
@@ -37,6 +36,11 @@ export default function CanvasGrid({
   const [placed, setPlaced] = useState<Record<string, string>>({});
   const [hover, setHover] = useState<Offset | null>(null);
   const [msg, setMsg] = useState("");
+
+  const onShapesChangeRef = useRef(onShapesChange);
+  useEffect(() => {
+    onShapesChangeRef.current = onShapesChange;
+  }, [onShapesChange]);
 
   // Refs pour la boucle rAF — évite de recréer draw à chaque state change
   const availableRef = useRef(available);
@@ -237,8 +241,8 @@ export default function CanvasGrid({
       setRot(0);
       // Schedule after React has processed state updates — never call a parent
       // setState inside a child setState setter (triggers the "update during render" error)
-      setTimeout(() => onShapesChange?.(nextAvailable.length), 0);
-    };;
+      setTimeout(() => onShapesChangeRef.current?.(nextAvailable.length), 0);
+    };
 
     c.addEventListener("mousemove", move);
     c.addEventListener("mouseleave", leave);
@@ -257,7 +261,7 @@ export default function CanvasGrid({
     if (all) {
       setMsg("🎉 Gagné !");
       setTimeout(() => onWin?.(), 300);
-    } else if (!available.length) setMsg("Perdu — plus de formes");
+    } else if (!available.length) setMsg("Perdu, plus de formes");
   }, [placed, available, onWin]);
 
   return (

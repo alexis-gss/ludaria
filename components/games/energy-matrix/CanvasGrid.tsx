@@ -4,6 +4,8 @@ import { useRef, useEffect, useState, useCallback, useMemo } from "react";
 
 import type { LevelDef, Offset } from "@/types/energy-matrix";
 
+import { drawOctagon } from "@/components/games/energy-matrix/draw-utils";
+
 import Selectors from "@/components/games/energy-matrix/Selectors";
 
 const rotate = (offsets: Offset[], t = 1) => {
@@ -14,35 +16,17 @@ const rotate = (offsets: Offset[], t = 1) => {
 };
 const add = (a: Offset, b: Offset) => ({ x: a.x + b.x, y: a.y + b.y });
 
-function drawOctagon(
-  ctx: CanvasRenderingContext2D,
-  cx: number,
-  cy: number,
-  r: number,
-  fill?: string,
-  stroke?: string,
-  lw = 1
-) {
-  const path = new Path2D();
-  const pts = [...Array(8)].map((_, i) => {
-    const th = (Math.PI / 4) * i + Math.PI / 8;
-    return { x: cx + Math.cos(th) * r, y: cy + Math.sin(th) * r };
-  });
-  path.moveTo(pts[0].x, pts[0].y);
-  pts.forEach((p) => path.lineTo(p.x, p.y));
-  path.closePath();
-  if (fill) {
-    ctx.fillStyle = fill;
-    ctx.fill(path);
-  }
-  if (stroke) {
-    ctx.lineWidth = lw;
-    ctx.strokeStyle = stroke;
-    ctx.stroke(path);
-  }
+interface CanvasGridProps {
+  level: LevelDef;
+  onShapesChange?: (remaining: number) => void;
+  onWin?: () => void;
 }
 
-export default function Grid({ level }: { level: LevelDef }) {
+export default function CanvasGrid({
+  level,
+  onShapesChange,
+  onWin,
+}: CanvasGridProps) {
   const canvas = useRef<HTMLCanvasElement>(null);
 
   const [available, setAvailable] = useState(
@@ -193,6 +177,7 @@ export default function Grid({ level }: { level: LevelDef }) {
 
   function handleReset() {
     setAvailable(level.shapes);
+    onShapesChange?.(level.shapes.length);
     setSel(0);
     setRot(0);
     setPlaced({});
@@ -244,10 +229,16 @@ export default function Grid({ level }: { level: LevelDef }) {
         next[`${p.x},${p.y}`] = shape.color;
       });
       setPlaced(next);
-      setAvailable((a) => a.filter((_, i) => i !== selRef.current));
+      const nextAvailable = availableRef.current.filter(
+        (_, i) => i !== selRef.current,
+      );
+      setAvailable(nextAvailable);
       setSel(0);
       setRot(0);
-    };
+      // Schedule after React has processed state updates — never call a parent
+      // setState inside a child setState setter (triggers the "update during render" error)
+      setTimeout(() => onShapesChange?.(nextAvailable.length), 0);
+    };;
 
     c.addEventListener("mousemove", move);
     c.addEventListener("mouseleave", leave);
@@ -263,9 +254,11 @@ export default function Grid({ level }: { level: LevelDef }) {
     const all = Object.keys(targetRef.current).every(
       (k) => placedRef.current[k],
     );
-    if (all) setMsg("🎉 Gagné !");
-    else if (!available.length) setMsg("Perdu — plus de formes");
-  }, [placed, available]);
+    if (all) {
+      setMsg("🎉 Gagné !");
+      setTimeout(() => onWin?.(), 300);
+    } else if (!available.length) setMsg("Perdu — plus de formes");
+  }, [placed, available, onWin]);
 
   return (
     <>
@@ -274,9 +267,6 @@ export default function Grid({ level }: { level: LevelDef }) {
         available={available}
         selected={sel}
         onRotate={() => setRot((r) => (r + 1) % 4)}
-        onSelectNext={(d) =>
-          setSel((i) => (i + d + available.length) % available.length)
-        }
         onSelectShape={(i) => setSel(i)}
         onReset={handleReset}
       />

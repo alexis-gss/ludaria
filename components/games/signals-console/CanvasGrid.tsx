@@ -144,14 +144,7 @@ export default function CanvasGrid({
             ctx.globalAlpha = 0.5;
             ctx.fillStyle = color;
             ctx.beginPath();
-            const cx = x + CELL_SIZE / 2;
-            const cy = y + CELL_SIZE / 2;
-            const d = 7;
-            ctx.moveTo(cx, cy - d);
-            ctx.lineTo(cx + d, cy);
-            ctx.lineTo(cx, cy + d);
-            ctx.lineTo(cx - d, cy);
-            ctx.closePath();
+            ctx.arc(x + CELL_SIZE / 2, y + CELL_SIZE / 2, 7, 0, Math.PI * 2);
             ctx.fill();
             ctx.restore();
           } else {

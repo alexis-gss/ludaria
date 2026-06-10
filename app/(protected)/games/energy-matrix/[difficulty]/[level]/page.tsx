@@ -1,13 +1,17 @@
 "use client";
 
-import { useParams } from "next/navigation";
-import { useState } from "react";
+import { PuzzleType } from "@prisma/client";
+import { useParams, useRouter } from "next/navigation";
+import { useCallback, useState } from "react";
 
 import type { DifficultyType } from "@prisma/client";
 
-import Grid from "@/components/games/energy-matrix/Grid";
-import LevelInfo from "@/components/games/energy-matrix/LevelInfo";
+import CanvasGrid from "@/components/games/energy-matrix/CanvasGrid";
+import EndLevelModal from "@/components/games/EndLevelModal";
+import LevelInfo from "@/components/games/LevelInfo";
 import OverlayTuto from "@/components/games/OverlayTuto";
+import { useProgressionGuard } from "@/hooks/use-progression-guard";
+import { useSaveProgression } from "@/hooks/use-save-progression";
 import {
   LEVELS_BY_DIFFICULTY,
   TUTOS_BY_DIFFICULTY,
@@ -16,9 +20,12 @@ import { GAMES } from "@/lib/utils";
 
 export default function EnergyMatrixLevelPage() {
   const { difficulty, level } = useParams();
+  const router = useRouter();
 
-  const [info, setInfo] = useState<boolean>(false);
-  const [steps, setSteps] = useState<number>(1);
+  const [info, setInfo] = useState(false);
+  const [steps, setSteps] = useState(1);
+  const [gameOver, setGameOver] = useState(false);
+  const [won, setWon] = useState(false);
 
   const slug = GAMES[1].slug;
   const diff = difficulty as DifficultyType;
@@ -27,6 +34,40 @@ export default function EnergyMatrixLevelPage() {
   const levelDef = levels.find((l) => l.id === levelNum);
   const overlays = TUTOS_BY_DIFFICULTY[diff];
   const overlay = overlays[steps as keyof typeof overlays];
+
+  const [remainingShapes, setRemainingShapes] = useState(
+    levelDef ? levelDef.shapes.length : 0,
+  );
+
+  useProgressionGuard({
+    puzzleType: PuzzleType.energy_matrix,
+    diff,
+    levelNum,
+    onUnlocked: () => setInfo(true),
+  });
+
+  const saveProgression = useSaveProgression({
+    puzzleType: PuzzleType.energy_matrix,
+    diff,
+    levelId: levelDef?.id,
+  });
+
+  const handleReset = useCallback(() => {
+    if (!levelDef) return;
+    setRemainingShapes(levelDef.shapes.length);
+    setWon(false);
+    setGameOver(false);
+  }, [levelDef]);
+
+  const handleWin = useCallback(async () => {
+    setWon(true);
+    setGameOver(true);
+    await saveProgression();
+  }, [saveProgression]);
+
+  const handleShapesChange = useCallback((n: number) => {
+    setRemainingShapes(n);
+  }, []);
 
   if (!levelDef) return null;
 
@@ -37,7 +78,7 @@ export default function EnergyMatrixLevelPage() {
           {...overlay}
           steps={steps}
           maxSteps={Object.keys(overlays).length}
-          onClick={() => setSteps(steps + 1)}
+          onClick={() => setSteps((s) => s + 1)}
         />
       ) : null}
       <div className="max-w-7xl mx-auto p-6 pt-18">
@@ -45,13 +86,30 @@ export default function EnergyMatrixLevelPage() {
           slug={slug}
           level={levelDef.id}
           difficulty={diff}
+          counter={remainingShapes}
+          counterLabel="Remaining shapes:"
           onClick={() => {
             setInfo(true);
             setSteps(1);
           }}
         />
-        <Grid level={levelDef} />
+        <CanvasGrid
+          level={levelDef}
+          onShapesChange={handleShapesChange}
+          onWin={handleWin}
+        />
       </div>
+      {gameOver ? (
+        <EndLevelModal
+          slug={slug}
+          won={won}
+          onRetry={handleReset}
+          onNext={() => {
+            if (won && levelDef.id < levels.length)
+              router.push(`/games/${slug}/${diff}/${levelDef.id + 1}`);
+          }}
+        />
+      ) : null}
     </main>
   );
 }

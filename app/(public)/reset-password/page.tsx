@@ -52,9 +52,7 @@ export default function ResetPasswordPage() {
       {/* Card Container */}
       <Magnet padding={85} magnetStrength={50}>
         <div className="relative z-10 w-full max-w-md rounded-2xl bg-white dark:bg-black/30 backdrop-blur-xl p-8 shadow-2xl transition-colors duration-500">
-          <h1
-            className="text-3xl font-bold text-center mb-6 text-gray-900 dark:text-white transition-colors"
-          >
+          <h1 className="text-3xl font-bold text-center mb-6 text-gray-900 dark:text-white transition-colors">
             Reset Password
           </h1>
           <p className="text-center text-sm text-gray-700 dark:text-white/70 mb-8">
@@ -90,7 +88,7 @@ export default function ResetPasswordPage() {
             </div>
           </form>
           <p className="text-center text-gray-700 dark:text-white/70 text-sm mt-6">
-            You have already registered?{" "}
+            Already registered?{" "}
             <Link
               href="/login"
               className="text-purple-500 hover:underline hover:underline-offset-3 transition-colors"

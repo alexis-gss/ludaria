@@ -2,35 +2,35 @@
 
 import { InfoIcon } from "lucide-react";
 
-import type { CellColor } from "@/types/overflowing-palette";
 import type { DifficultyType } from "@prisma/client";
 
 import BtnBackTo, { DeepPageEnum } from "@/components/games/BtnBackTo";
-import RemainingMoves from "@/components/games/RemainingMoves";
+import DynamicCounter from "@/components/games/DynamicCounter";
 import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import str from "@/hooks/use-string";
-import { COLOR_CLASSES } from "@/lib/overflowing-palette/global";
 
-interface LevelInfoProps {
+interface LevelInfoBaseProps {
   slug: string;
   level: number;
-  movesLeft: number;
-  target: CellColor;
   difficulty: DifficultyType;
   onClick: () => void;
 }
 
+interface LevelInfoWithCounter extends LevelInfoBaseProps {
+  counter: number;
+  counterLabel?: string;
+  /** Extra content rendered to the right of the counter (e.g. goal color swatch) */
+  extra?: React.ReactNode;
+}
+
+type LevelInfoProps = LevelInfoWithCounter;
+
 export default function LevelInfo({
   slug,
   level,
-  movesLeft,
-  target,
   difficulty,
+  counter,
+  counterLabel,
+  extra,
   onClick,
 }: LevelInfoProps) {
   return (
@@ -51,21 +51,8 @@ export default function LevelInfo({
         <span className="text-muted-foreground">({difficulty})</span>
       </h2>
       <div className="flex items-center justify-between gap-2 mt-5 mb-2 relative">
-        <RemainingMoves number={movesLeft} />
-        <div className="flex items-center justify-center gap-2">
-          <span>Goal:</span>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div className={`w-6 h-6 rounded ${COLOR_CLASSES[target]}`} />
-            </TooltipTrigger>
-            <TooltipContent className="text-center">
-              Turn all blocks into{" "}
-              <div className={`font-bold text-${target}-500`}>
-                {str(target).upperCase().value()}
-              </div>
-            </TooltipContent>
-          </Tooltip>
-        </div>
+        <DynamicCounter number={counter} label={counterLabel} />
+        {extra}
       </div>
     </div>
   );

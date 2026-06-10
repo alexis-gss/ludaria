@@ -2,15 +2,17 @@
 
 import { PuzzleType } from "@prisma/client";
 import { useParams, useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 import type { DifficultyType } from "@prisma/client";
 
 import BtnResetGrid from "@/components/games/BtnResetGrid";
-import OverlayTuto from "@/components/games/OverlayTuto";
 import CanvasGrid, { type Path } from "@/components/games/signals-console/CanvasGrid";
-import EndLevelModal from "@/components/games/signals-console/EndLevelModal";
-import LevelInfo from "@/components/games/signals-console/LevelInfo";
+import EndLevelModal from "@/components/games/EndLevelModal";
+import LevelInfo from "@/components/games/LevelInfo";
+import OverlayTuto from "@/components/games/OverlayTuto";
+import { useProgressionGuard } from "@/hooks/use-progression-guard";
+import { useSaveProgression } from "@/hooks/use-save-progression";
 import {
   LEVELS_BY_DIFFICULTY,
   TUTOS_BY_DIFFICULTY,
@@ -18,47 +20,37 @@ import {
 import { GAMES } from "@/lib/utils";
 
 export default function SignalsConsoleLevelPage() {
-  const { level, difficulty } = useParams();
+  const { difficulty, level } = useParams();
   const router = useRouter();
 
   const slug = GAMES[2].slug;
-  const levelNum = Number(level);
   const diff = difficulty as DifficultyType;
-  const difficultyLevels = LEVELS_BY_DIFFICULTY[diff];
+  const levelNum = Number(level);
+  const levels = LEVELS_BY_DIFFICULTY[diff] || [];
+  const levelDef = levels.find((l) => l.id === levelNum);
 
-  const [steps, setSteps] = useState<number>(1);
+  const [info, setInfo] = useState(false);
+  const [steps, setSteps] = useState(1);
   const overlays = TUTOS_BY_DIFFICULTY[diff];
   const overlay = overlays[steps as keyof typeof overlays];
-  const [info, setInfo] = useState<boolean>(false);
-  const [levelDef] = useState(() =>
-    difficultyLevels.find((l) => l.id === Number(level)),
-  );
-  const [gameOver, setGameOver] = useState<boolean>(false);
-  const [won, setWon] = useState<boolean>(false);
-  const [paths, setPaths] = useState<Path[]>([]);
-  const [segmentsUsed, setSegmentsUsed] = useState<number>(0);
 
-  // 🔐 Vérifie que l'utilisateur a débloqué le niveau
-  useEffect(() => {
-    const fetchProgress = async () => {
-      try {
-        const res = await fetch("/api/progression", { cache: "no-store" });
-        if (!res.ok) return;
-        const data: Record<
-          PuzzleType,
-          Record<DifficultyType, number>
-        > = await res.json();
-        const progressionLevel = data.signals_console?.[diff];
-        if (levelNum === 1) setInfo(true);
-        if (levelNum > progressionLevel + 1) {
-          router.push(`/games/signals-console/${diff}`);
-        }
-      } catch (err) {
-        console.error("Erreur récupération progression:", err);
-      }
-    };
-    fetchProgress();
-  }, [diff, levelNum, router]);
+  const [gameOver, setGameOver] = useState(false);
+  const [won, setWon] = useState(false);
+  const [paths, setPaths] = useState<Path[]>([]);
+  const [segmentsUsed, setSegmentsUsed] = useState(0);
+
+  useProgressionGuard({
+    puzzleType: PuzzleType.signals_console,
+    diff,
+    levelNum,
+    onUnlocked: () => setInfo(true),
+  });
+
+  const saveProgression = useSaveProgression({
+    puzzleType: PuzzleType.signals_console,
+    diff,
+    levelId: levelDef?.id,
+  });
 
   const handleReset = useCallback(() => {
     setPaths([]);
@@ -67,24 +59,11 @@ export default function SignalsConsoleLevelPage() {
     setSegmentsUsed(0);
   }, []);
 
-  const handleWin = async () => {
+  const handleWin = useCallback(async () => {
     setWon(true);
     setGameOver(true);
-    // ✅ POST vers la nouvelle route /api/progression
-    try {
-      await fetch("/api/progression", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: PuzzleType.signals_console,
-          difficulty: diff,
-          level: levelDef?.id,
-        }),
-      });
-    } catch (err) {
-      console.error("Erreur sauvegarde progression :", err);
-    }
-  };
+    await saveProgression();
+  }, [saveProgression]);
 
   const handleSegmentsChange = useCallback(
     (used: number) => {
@@ -106,19 +85,18 @@ export default function SignalsConsoleLevelPage() {
           {...overlay}
           steps={steps}
           maxSteps={Object.keys(overlays).length}
-          onClick={() => setSteps(steps + 1)}
+          onClick={() => setSteps((s) => s + 1)}
         />
       ) : null}
       <LevelInfo
         slug={slug}
         level={levelDef.id}
         difficulty={diff}
+        counter={levelDef.moves - segmentsUsed}
         onClick={() => {
           setInfo(true);
           setSteps(1);
         }}
-        maxSegments={levelDef.moves}
-        segmentsUsed={segmentsUsed}
       />
       <CanvasGrid
         level={levelDef}
@@ -136,7 +114,7 @@ export default function SignalsConsoleLevelPage() {
           won={won}
           onRetry={handleReset}
           onNext={() => {
-            if (won && levelDef.id < difficultyLevels.length)
+            if (won && levelDef.id < levels.length)
               router.push(`/games/${slug}/${diff}/${levelDef.id + 1}`);
           }}
         />

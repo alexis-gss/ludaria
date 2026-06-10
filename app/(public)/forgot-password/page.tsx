@@ -84,7 +84,7 @@ export default function ForgotPasswordPage() {
             </div>
           </form>
           <p className="text-center text-gray-700 dark:text-white/70 text-sm mt-6">
-            You have already registered?{" "}
+            Already registered?{" "}
             <Link
               href="/login"
               className="text-purple-500 hover:underline hover:underline-offset-3 transition-colors"

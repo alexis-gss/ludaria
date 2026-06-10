@@ -1,8 +1,8 @@
 "use client";
 
 import { PuzzleType } from "@prisma/client";
-import { useRouter, useParams } from "next/navigation";
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import type { CellColor } from "@/types/overflowing-palette";
 import type { DifficultyType } from "@prisma/client";
@@ -10,14 +10,23 @@ import type { DifficultyType } from "@prisma/client";
 import BtnResetGrid from "@/components/games/BtnResetGrid";
 import CanvasGrid from "@/components/games/overflowing-palette/CanvasGrid";
 import ColorSelector from "@/components/games/overflowing-palette/ColorSelector";
-import EndLevelModal from "@/components/games/overflowing-palette/EndLevelModal";
-import LevelInfo from "@/components/games/overflowing-palette/LevelInfo";
+import EndLevelModal from "@/components/games/EndLevelModal";
+import LevelInfo from "@/components/games/LevelInfo";
 import OverlayTuto from "@/components/games/OverlayTuto";
+import { useProgressionGuard } from "@/hooks/use-progression-guard";
+import { useSaveProgression } from "@/hooks/use-save-progression";
 import {
+  COLOR_CLASSES,
   LEVELS_BY_DIFFICULTY,
   TUTOS_BY_DIFFICULTY,
 } from "@/lib/overflowing-palette/global";
 import { GAMES } from "@/lib/utils";
+import str from "@/hooks/use-string";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default function OverflowingPaletteLevelPage() {
   const { difficulty, level } = useParams();
@@ -26,26 +35,47 @@ export default function OverflowingPaletteLevelPage() {
   const slug = GAMES[0].slug;
   const diff = difficulty as DifficultyType;
   const levelNum = Number(level);
-
   const levels = LEVELS_BY_DIFFICULTY[diff] || [];
   const levelDef = levels.find((l) => l.id === levelNum);
 
   const [grid, setGrid] = useState<CellColor[][]>(
-    levelDef ? levelDef.grid.map((r) => [...r]) : []
+    levelDef ? levelDef.grid.map((r) => [...r]) : [],
   );
   const [selectedColor, setSelectedColor] = useState<CellColor>("blue");
-  const [movesLeft, setMovesLeft] = useState<number>(levelDef ? levelDef.moves : 0);
-  const [gameOver, setGameOver] = useState<boolean>(false);
-  const [won, setWon] = useState<boolean>(false);
-  const [celebrate, setCelebrate] = useState<boolean>(false);
-  const [movesUsed, setMovesUsed] = useState<number>(0);
+  const [movesLeft, setMovesLeft] = useState(levelDef ? levelDef.moves : 0);
+  const [gameOver, setGameOver] = useState(false);
+  const [won, setWon] = useState(false);
+  const [celebrate, setCelebrate] = useState(false);
+  const [movesUsed, setMovesUsed] = useState(0);
   const animatingRef = useRef(false);
 
-  // Overlays tuto.
-  const [info, setInfo] = useState<boolean>(false);
-  const [steps, setSteps] = useState<number>(1);
+  const [info, setInfo] = useState(false);
+  const [steps, setSteps] = useState(1);
   const overlays = TUTOS_BY_DIFFICULTY[diff];
   const overlay = overlays[steps as keyof typeof overlays];
+
+  // Redirect if level not found
+  useEffect(() => {
+    if (!levels.length || !levelDef) {
+      router.push(`/games/overflowing-palette/${diff}`);
+      return;
+    }
+    setGrid(levelDef.grid.map((r) => [...r]));
+    setMovesLeft(levelDef.moves);
+  }, [levels.length, levelDef, diff, router]);
+
+  useProgressionGuard({
+    puzzleType: PuzzleType.overflowing_palette,
+    diff,
+    levelNum,
+    onUnlocked: () => setInfo(true),
+  });
+
+  const saveProgression = useSaveProgression({
+    puzzleType: PuzzleType.overflowing_palette,
+    diff,
+    levelId: levelDef?.id,
+  });
 
   const handleReset = useCallback(() => {
     if (!levelDef) return;
@@ -57,48 +87,13 @@ export default function OverflowingPaletteLevelPage() {
     setMovesUsed(0);
   }, [levelDef]);
 
-  // ✅ Sécurisation et réinitialisation de la grille
-  useEffect(() => {
-    if (!levels.length || !levelDef) {
-      router.push(`/games/overflowing-palette/${diff}`);
-      return;
-    }
-    setGrid(levelDef.grid.map((r) => [...r]));
-    setMovesLeft(levelDef.moves);
-  }, [levels.length, levelDef, diff, router]);
-
-  // 🔐 Vérifie que l’utilisateur a débloqué le niveau
-  useEffect(() => {
-    const fetchProgress = async () => {
-      try {
-        const res = await fetch("/api/progression", { cache: "no-store" });
-        if (!res.ok) return;
-
-        const data: Record<
-          PuzzleType,
-          Record<DifficultyType, number>
-        > = await res.json();
-        const progressionLevel = data.overflowing_palette?.[diff];
-        if (levelNum === 1) {
-          setInfo(true);
-        }
-        if (levelNum > progressionLevel + 1) {
-          router.push(`/games/overflowing-palette/${diff}`);
-        }
-      } catch (err) {
-        console.error("Erreur récupération progression:", err);
-      }
-    };
-    fetchProgress();
-  }, [diff, levelNum, router]);
-
   const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
   const animateFloodFill = async (
     g: CellColor[][],
     sr: number,
     sc: number,
-    newColor: CellColor
+    newColor: CellColor,
   ) => {
     animatingRef.current = true;
     const rows = g.length;
@@ -137,16 +132,14 @@ export default function OverflowingPaletteLevelPage() {
       for (const [dr, dc] of dirs) queue.push([r + dr, c + dc, d + 1]);
     }
 
-    const waveDelay = 50;
     const maxWave = Math.max(...waves.keys());
-
     for (let d = 0; d <= maxWave; d++) {
       const cells = waves.get(d) || [];
       cells.forEach(([r, c]) => {
         g[r][c] = newColor;
       });
       setGrid(g.map((r) => [...r]));
-      await delay(waveDelay);
+      await delay(50);
     }
 
     animatingRef.current = false;
@@ -169,7 +162,6 @@ export default function OverflowingPaletteLevelPage() {
     setMovesUsed(used);
 
     const g = grid.map((r) => [...r]);
-
     await animateFloodFill(g, r, c, selectedColor);
 
     const UNFREEZE_AFTER = levelDef.unfreezeAfter ?? 0;
@@ -184,26 +176,12 @@ export default function OverflowingPaletteLevelPage() {
     setGrid(g);
 
     if (allTarget(g)) {
-      setTimeout(() => {
+      setTimeout(async () => {
         setWon(true);
         setGameOver(true);
         setCelebrate(true);
+        await saveProgression();
       }, 300);
-
-      // ✅ POST vers la nouvelle route /api/progression
-      try {
-        await fetch("/api/progression", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            type: PuzzleType.overflowing_palette,
-            difficulty: diff,
-            level: levelDef.id,
-          }),
-        });
-      } catch (err) {
-        console.error("Erreur sauvegarde progression :", err);
-      }
       return;
     }
 
@@ -217,6 +195,25 @@ export default function OverflowingPaletteLevelPage() {
 
   if (!levelDef) return null;
 
+  const goalSwatch = (
+    <div className="flex items-center justify-center gap-2">
+      <span>Goal:</span>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div
+            className={`w-6 h-6 rounded ${COLOR_CLASSES[levelDef.target]}`}
+          />
+        </TooltipTrigger>
+        <TooltipContent className="text-center">
+          Turn all blocks into{" "}
+          <div className={`font-bold text-${levelDef.target}-500`}>
+            {str(levelDef.target).upperCase().value()}
+          </div>
+        </TooltipContent>
+      </Tooltip>
+    </div>
+  );
+
   return (
     <main className="relative min-h-screen flex flex-col items-center justify-center">
       {info && overlay ? (
@@ -224,16 +221,16 @@ export default function OverflowingPaletteLevelPage() {
           {...overlay}
           steps={steps}
           maxSteps={Object.keys(overlays).length}
-          onClick={() => setSteps(steps + 1)}
+          onClick={() => setSteps((s) => s + 1)}
         />
       ) : null}
       <div className="max-w-7xl mx-auto p-6 pt-18">
         <LevelInfo
           slug={slug}
           level={levelDef.id}
-          movesLeft={movesLeft}
-          target={levelDef.target}
           difficulty={diff}
+          counter={movesLeft}
+          extra={goalSwatch}
           onClick={() => {
             setInfo(true);
             setSteps(1);

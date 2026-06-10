@@ -3,11 +3,9 @@
 import { DifficultyType } from "@prisma/client";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 
-import type { LevelDef as LevelDefEnergyMatrix } from "@/types/energy-matrix";
-import type { LevelDef as LevelDefOverflowingPalette } from "@/types/overflowing-palette";
-import type { LevelDef as LevelDefSignalsConsole } from "@/types/signals-console";
+import type { AnyLevelDef } from "@/types/global";
 import type { PuzzleType } from "@prisma/client";
 
 import { ExpandingColumn } from "@/components/ExpandingColumn";
@@ -45,54 +43,54 @@ const DIFFICULTY_META = [
   },
 ] as const;
 
+const INITIAL_PROGRESS: Record<DifficultyType, number> = {
+  [DifficultyType.easy]: 0,
+  [DifficultyType.medium]: 0,
+  [DifficultyType.hard]: 0,
+};
+
+const INITIAL_COMPLETED: Record<DifficultyType, boolean> = {
+  [DifficultyType.easy]: false,
+  [DifficultyType.medium]: false,
+  [DifficultyType.hard]: false,
+};
+
 export default function DifficultyPage({
   name,
   levels,
 }: {
   name: string;
-  levels: Record<
-    DifficultyType,
-    | LevelDefEnergyMatrix[]
-    | LevelDefOverflowingPalette[]
-    | LevelDefSignalsConsole[]
-  >;
+  levels: Record<DifficultyType, AnyLevelDef[]>;
 }) {
   const router = useRouter();
   const slug = str(name).slug().value();
 
-  const difficulties = useMemo(() => DIFFICULTY_META, []);
-
-  const [progress, setProgress] = useState<Record<DifficultyType, number>>({
-    [DifficultyType.easy]: 0,
-    [DifficultyType.medium]: 0,
-    [DifficultyType.hard]: 0,
-  });
-  const [completed, setCompleted] = useState<Record<DifficultyType, boolean>>({
-    [DifficultyType.easy]: false,
-    [DifficultyType.medium]: false,
-    [DifficultyType.hard]: false,
-  });
+  const [progress, setProgress] =
+    useState<Record<DifficultyType, number>>(INITIAL_PROGRESS);
+  const [completed, setCompleted] =
+    useState<Record<DifficultyType, boolean>>(INITIAL_COMPLETED);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     if (!mounted) return;
+
     const fetchProgressions = async () => {
       try {
         const res = await fetch("/api/progression", { cache: "no-store" });
         if (!res.ok) return;
+
         const data: Record<
           PuzzleType,
           Record<DifficultyType, number>
         > = await res.json();
-
         const gameKey = str(name).snakeCase().value() as PuzzleType;
 
-        const newProgress = { ...progress };
-        const newCompleted = { ...completed };
+        const newProgress = { ...INITIAL_PROGRESS };
+        const newCompleted = { ...INITIAL_COMPLETED };
 
-        difficulties.forEach((d) => {
+        DIFFICULTY_META.forEach((d) => {
           const level = data[gameKey]?.[d.key] ?? 0;
           const totalLevels = levels[d.key]?.length ?? 0;
           newProgress[d.key] = Math.min(level, totalLevels);
@@ -105,8 +103,10 @@ export default function DifficultyPage({
         console.error("Erreur récupération progressions :", err);
       }
     };
+
     fetchProgressions();
-  }, [mounted, difficulties, completed, progress, name, levels]);
+    // Only re-fetch when the game or mount state changes — not on every state update
+  }, [mounted, name, levels]);
 
   if (!mounted) {
     return (
@@ -130,7 +130,7 @@ export default function DifficultyPage({
       </div>
       {/* Expanding columns */}
       <div className="flex flex-col md:flex-row w-full h-auto md:h-64 overflow-hidden rounded-2xl shadow-lg">
-        {difficulties.map((d, i) => {
+        {DIFFICULTY_META.map((d, i) => {
           const total = levels[d.key]?.length ?? 0;
           const done = progress[d.key];
           const pct = total ? Math.round((done / total) * 100) : 0;

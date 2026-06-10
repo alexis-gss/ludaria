@@ -1,12 +1,10 @@
 "use client";
 
-import { Lock, Check } from "lucide-react";
-import { useRouter, useParams } from "next/navigation";
+import { Check, Lock } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 
-import type { LevelDef as LevelDefEnergyMatrix } from "@/types/energy-matrix";
-import type { LevelDef as LevelDefOverflowingPalette } from "@/types/overflowing-palette";
-import type { LevelDef as LevelDefSignalsConsole } from "@/types/signals-console";
+import type { AnyLevelDef } from "@/types/global";
 import type { DifficultyType, PuzzleType } from "@prisma/client";
 
 import BtnBackTo, { DeepPageEnum } from "@/components/games/BtnBackTo";
@@ -20,12 +18,7 @@ export default function LevelsPage({
   targetLevels,
 }: {
   name: string;
-  targetLevels: Record<
-    DifficultyType,
-    | LevelDefOverflowingPalette[]
-    | LevelDefEnergyMatrix[]
-    | LevelDefSignalsConsole[]
-  >;
+  targetLevels: Record<DifficultyType, AnyLevelDef[]>;
 }) {
   const slug = str(name).slug().value();
   const { difficulty } = useParams();
@@ -121,7 +114,7 @@ export default function LevelsPage({
               `}
             >
               <span className="font-semibold text-lg">Level {lvl.id}</span>
-              {"moves" in lvl && (
+              {lvl.moves !== undefined && (
                 <span className="text-sm">({lvl.moves} moves)</span>
               )}
               {locked ? (

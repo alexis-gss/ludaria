@@ -19,3 +19,6 @@ export type Tuto = {
   borderRadius?: number;
   overlayColor?: string;
 };
+
+/** Minimal shape shared by all game LevelDef types */
+export type AnyLevelDef = { id: number; moves?: number };

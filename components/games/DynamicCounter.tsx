@@ -3,11 +3,15 @@
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
-interface RemainingMovesProps {
+interface DynamicCounterProps {
   number: number;
+  label?: string;
 }
 
-export default function RemainingMoves({ number }: RemainingMovesProps) {
+export default function DynamicCounter({
+  number,
+  label = "Remaining moves:",
+}: DynamicCounterProps) {
   const [, setPrevMoves] = useState(number);
   const maxObservedRef = useRef<number>(number);
 
@@ -28,7 +32,7 @@ export default function RemainingMoves({ number }: RemainingMovesProps) {
 
   return (
     <div className="relative flex items-center gap-1">
-      <span>Remaining moves:</span>
+      <span>{label}</span>
       <div className="relative overflow-hidden h-6" style={{ width }}>
         <motion.span
           key={number}

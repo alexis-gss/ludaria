@@ -82,13 +82,13 @@ export const TUTOS_BY_DIFFICULTY: Record<DifficultyType, Record<number, Tuto>> =
     1: {
       width: "23rem",
       height: "28.3rem",
-      top: "2.7rem",
+      top: "3.7rem",
       content: `In medium mode, a ${highlightingText("new color")} is added to connect in the grid.`,
     },
     2: {
       width: "23rem",
       height: "28.3rem",
-      top: "2.7rem",
+      top: "3.7rem",
       content: `Black cells are ${highlightingText("walls")} — no path can pass through them.`,
     },
   },
@@ -96,14 +96,14 @@ export const TUTOS_BY_DIFFICULTY: Record<DifficultyType, Record<number, Tuto>> =
     1: {
       width: "23rem",
       height: "28.3rem",
-      top: "2.7rem",
-      content: `In hard mode, ${highlightingText("restricted cells")} appear — only the matching color can pass through them.`,
+      top: "3.7rem",
+      content: `In hard mode, a ${highlightingText("new color")} is added to connect in the grid.`,
     },
     2: {
       width: "23rem",
       height: "28.3rem",
-      top: "2.7rem",
-      content: `A tinted cell with a ${highlightingText("diamond")} only lets through the path of the same color.`,
+      top: "3.7rem",
+      content: `A tinted cell with a ${highlightingText("little circle")} only lets through the path of the same color.`,
     },
   },
 };

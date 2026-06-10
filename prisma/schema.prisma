@@ -15,7 +15,7 @@ model Users {
   resetToken       String?
   resetTokenExpiry DateTime?
   createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
+  updatedAt        DateTime       @default(now())
   progressions     Progressions[]
 }
 
@@ -39,7 +39,7 @@ model Progressions {
   difficulty DifficultyType
   level      Int
   createdAt  DateTime       @default(now())
-  updatedAt  DateTime       @updatedAt
+  updatedAt  DateTime       @default(now())
 
   @@unique([userId, type, difficulty])
 }
